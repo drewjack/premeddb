@@ -16,7 +16,7 @@ import datetime
 
 # Flask app defined
 app = Flask(__name__)
-
+s
 # Establishes secret key for app and email confirmation
 app.config['SECRET_KEY'] = 'thisisasecret'
 app.config['SECURITY_PASSWORD_SALT'] = 'alsoasecret'
