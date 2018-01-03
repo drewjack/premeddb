@@ -1,0 +1,230 @@
+{% extends "layouts/layout1.html" %}
+{% block title %}
+Academics
+{% endblock %}
+{% block content %}
+    <div class="container">
+      <h1>Academics</h1>
+      <br>
+      <p>Use the following three sections below to track your GPA, MCAT, and references.</p>
+
+
+    <h2>GPA</h2>
+    <p>This GPA tracker allows you to record your overall and science GPA by semester as well as your net cumulative GPA. Look to the dashboard to see a handy line graph summary</p>
+     <table id="table" class="table table-hover table-mc-light-blue">
+      <thead>
+        <tr>
+          <th>Overall GPA</th>
+          <th>Science GPA</th>
+          <th>Semester</th>
+          <th></th>
+        </tr>
+        <tr>
+        <form onsubmit="return myFunction();" action="{{ url_for('academics') }}" method="post">
+        <script>
+        function myFunction()
+        {
+            var x = document.getElementById("myText").value;
+            var y = document.getElementById("myText1").value;
+            if(isNaN(x)||isNaN(y))
+            {
+                alert("Please enter a number in the Overall GPA and and Science GPA column");
+                return false;
+            }
+        }
+        </script>
+        <th><input id="myText" type="text" placeholder="Overall GPA" name="ogpa" value="{{grades.ogpa}}"></th>
+        <th><input id="myText1" type="text" placeholder="Science GPA" name="sgpa" value="{{grades.sgpa}}"></th>
+        <th>
+            <select name='year'>
+              <option value=''>Semester</option>
+              <option value='Cumulative'>Cumulative</option>
+              <option value='1st Year Semester 1'>1st Year: Semester 1</option>
+              <option value='1st Year Semester 2'>1st Year: Semester 2</option>
+              <option value='2nd Year Semester 1'>2nd Year: Semester 1</option>
+              <option value='2nd Year Semester 2'>2nd Year: Semester 2</option>
+              <option value='3rd Year Semester 1'>3rd Year: Semester 1</option>
+              <option value='3rd Year Semester 2'>3rd Year: Semester 2</option>
+              <option value='4th Year Semester 1'>4th Year: Semester 1</option>
+              <option value='4th Year Semester 2'>4th Year: Semester 2</option>
+            </select>
+        </th>
+        <th><button class="btn btn-primary" type="submit" value="Submit"><span class="fa fa-plus"></span></button></th>
+        </form>
+        </tr>
+      </thead>
+        {% for r in grades %}
+          <tr>
+            <td style ="word-break:break-all;">
+                {{r.ogpa}}
+            </td>
+            <td style ="word-break:break-all;">
+                {{r.sgpa}}
+            </td>
+            <td style ="word-break:break-all;">
+                {{r.year}}
+            </td>
+            <td style ="word-break:break-all;">
+            <form action="{{ url_for('deletegrades') }}" method="post" >
+            <button class="btn btn-danger" type="submit" name="gradesdelete" value="{{ r.id }}">
+            <span class="fa fa-trash"></span></button>
+            </form>
+            </td>
+          </tr>
+        {% endfor %}
+     </table>
+
+    <h2>MCAT</h2>
+    <p>Enter your MCAT scores here. Once populated, there will be a visual bar graph on the dashboard.</p>
+     <table id="table" class="table table-hover table-mc-light-blue">
+      <thead>
+        <tr>
+          <th>Exam Date</th>
+          <th>Overall</th>
+          <th>C/P</th>
+          <th>CARS</th>
+          <th>B/B</th>
+          <th>P/S</th>
+          <th></th>
+        </tr>
+        <tr>
+        <form onsubmit="return myFunction1();" action="{{ url_for('mcat') }}" method="post">
+        <script>
+        function myFunction1()
+        {
+        var x = document.getElementById("myText2").value;
+        var y = document.getElementById("myText3").value;
+        var z = document.getElementById("myText4").value;
+        var a = document.getElementById("myText5").value;
+        var b = document.getElementById("myText6").value;
+
+        if(isNaN(x)||isNaN(y)||isNaN(z)||isNaN(a)||isNaN(b))
+        {
+        alert("Please enter a number in the MCAT section column");
+        return false;
+        }
+        else if(Number(x)>528||Number(x)<472)
+        {
+        alert("Cumulative MCAT score can only be between 472 and 528 ");
+        return false;
+        }
+        else if(Number(y)>132||Number(y)<118||Number(z)>132||Number(z)<118||Number(a)>132||Number(a)<118||Number(b)>132||Number(b)<118)
+        {
+        alert("MCAT section score can only be between 118 and 132 ");
+        return false;
+        }
+
+        }
+        </script>
+        <th><input type="date" placeholder="Exam Date" name="examdate" value="{{ request.form.examdate }}"></th>
+        <th><input id="myText2" type="text" placeholder="Overall" name="overall" value="{{ request.form.overall }}" style="width: 100px;"></th>
+        <th><input id="myText3" type="text" placeholder="C/P" name="cp" value="{{ request.form.cp }}" style="width: 100px;"></th>
+        <th><input id="myText4" type="text" placeholder="CARS" name="cars" value="{{ request.form.cars }}" style="width: 100px;"></th>
+        <th><input id="myText5" type="text" placeholder="B/B" name="bb" value="{{ request.form.bb }}" style="width: 100px;"></th>
+        <th><input id="myText6" type="text" placeholder="P/S" name="ps" value="{{ request.form.ps }}" style="width: 100px;"></th>
+        <th><button class="btn btn-primary" type="submit" value="Submit"><span class="fa fa-plus"></span></button></th>        </form>
+        </tr>
+      </thead>
+        {% for r in result %}
+          <tr>
+            <td style ="word-break:break-all;">
+                {{r.examdate}}
+            </td>
+            <td style ="word-break:break-all;">
+                {{r.overall}}
+            </td>
+            <td style ="word-break:break-all;">
+                {{r.cp}}
+            </td>
+            <td style ="word-break:break-all;">
+                {{r.cars}}
+            </td>
+            <td style ="word-break:break-all;">
+                {{r.bb}}
+            </td>
+            <td style ="word-break:break-all;">
+                {{r.ps}}
+            </td>
+            <td style ="word-break:break-all;">
+            <form action="{{ url_for('deletemcat') }}" method="post" >
+            <button class="btn btn-danger" type="submit" name="mcatdelete" value="{{ r.id }}">
+            <span class="fa fa-trash"></span></button>
+            </form>
+            </td>
+          </tr>
+        {% endfor %}
+     </table>
+
+     <h2>References</h2>
+     <p>Use this tool to document who you plan to ask for your letters of recommendations. This will allow you to keep consistent correspondence with your reference. Click the edit button once populated to view sample email templates.</p>
+     <table id="table" class="table table-hover table-mc-light-blue">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Type</th>
+          <th>Status</th>
+          <th></th>
+          <th></th>
+        </tr>
+        <tr>
+        <form action="{{ url_for('references') }}" method="post" onsubmit="setTimeout(function () { window.location.reload(); }, 10)">
+        <th><input type="text" placeholder="Name" name="name" value="{{ request.form.name }}"></th>
+        <th><input type="text" placeholder="Email" name="email" value="{{ request.form.email }}"></th>
+        <th>
+          <select name='type'>Reference Type
+          <option value=''>Type</option>
+          <option value='Science - Academic'>Science - Academic</option>
+          <option value='Humanities - Academic'>Humanities - Academic</option>
+          <option value='Research'>Research</option>
+          <option value='Volunteering'>Volunteering</option>
+          <option value='Leadership'>Leadership</option>
+          <option value='Work'>Work</option>
+          <option value='Miscellaneous'>Miscellaneous</option>
+          </select>
+        </th>
+        <th>
+          <select name='status'>Status
+          <option value=''>Status</option>
+          <option value='Requested'>Requested</option>
+          <option value='Materials Sent'>Materials Sent</option>
+          <option value='Letter Submitted'>Letter Submitted</option>
+          <option value='Thank You Letter Sent'>Thank You Letter Sent</option>
+          </select>
+        </th>
+        <th><button class="btn btn-primary" type="submit" value="Submit"><span class="fa fa-plus"></span></button></th>
+        <th></th>
+        </form>
+        </tr>
+      </thead>
+        {% for r in result1 %}
+          <tr>
+            <td style ="word-break:break-all;">
+                {{r.name}}
+            </td>
+            <td style ="word-break:break-all;">
+                {{r.email}}
+            </td>
+            <td style ="word-break:break-all;">
+                {{r.type}}
+            </td>
+            <td style ="word-break:break-all;">
+                {{r.status}}
+            </td>
+            <td style ="word-break:break-all;">
+            <form action="{{ url_for('academicsdetails') }}" method="post" >
+            <button class="btn btn-success" type="submit" name="academicsdetails" value="{{ r.id }}">
+            <span class="fa fa-pencil"></span></button>
+            </form>
+            </td>
+            <td style ="word-break:break-all;">
+            <form action="{{ url_for('deletereferences') }}" method="post" >
+            <button class="btn btn-danger" type="submit" name="referencesdelete" value="{{ r.id }}">
+            <span class="fa fa-trash"></span></button>
+            </form>
+            </td>
+          </tr>
+        {% endfor %}
+    </table>
+    </div>
+{% endblock %}

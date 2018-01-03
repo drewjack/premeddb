@@ -1,0 +1,373 @@
+{% extends "layouts/layout1.html" %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.js"></script>
+{% endblock %}
+
+{% block content %}
+<div>
+    <div class="container-fluid">
+      <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a>Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active">Welcome, {{ current_user.firstname }} {{ current_user.lastname }}! {{ admin }}</li>
+      </ol>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+              <strong>{{ message }}</strong>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+
+      <!-- Area Chart Example-->
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-area-chart"></i> GPA Tracker</div>
+        <div class="card-body">
+<canvas id="myChart" width="400" height="125"></canvas>
+<script>
+var canvas = document.getElementById('myChart');
+var data = {
+    labels: ['Yr 1/Sem 1', 'Yr 1/Sem 2', 'Yr 2/Sem 1', 'Yr 2/Sem 2', 'Yr 3/Sem 1', 'Yr 3/Sem 2', 'Yr 4/Sem 1', 'Yr 4/Sem 2'],
+    datasets: [
+        {
+            label: "Overall GPA",
+            fill: true,
+            lineTension: 0.0,
+            backgroundColor: "rgba(255, 0, 25,0.1)",
+            borderColor: "rgba(255, 0, 25,0.5)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "#000000",
+            pointBackgroundColor: "#fffdfd",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(255, 0, 25,1)",
+            pointHoverBorderColor: "rgba(255, 0, 25,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 0,
+            pointHitRadius: 10,
+            data: {{ ogpachart|tojson }}
+        }
+        ,
+        {
+            label: "Science GPA",
+            fill: true,
+            lineTension: 0.0,
+            backgroundColor: "rgba(255, 153, 0,0.1)",
+            borderColor: "rgba(255, 153, 0,0.5)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "#000000",
+            pointBackgroundColor: "#fffdfd",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(255, 153, 0,1)",
+            pointHoverBorderColor: "rgba(255, 153, 0,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 0,
+            pointHitRadius: 10,
+            data: {{ sgpachart|tojson }}
+        }
+        ,
+        {
+            label: "Cumulative GPA",
+            fill: false,
+            lineTension: 0.0,
+            backgroundColor: "rgba(0, 0, 0, 0)",
+            borderColor: "rgba(102, 0, 153, 0.5)",
+            borderCapStyle: 'butt',
+            borderDash: [10, 5],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(255, 229, 0,1)",
+            pointBackgroundColor: "#deff86",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(102, 0, 153,1)",
+            pointHoverBorderColor: "rgba(102, 0, 153,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 0,
+            pointHitRadius: 5,
+            data: {{ cumchart|tojson }}
+        }
+        ,
+        {
+            label: "Average Accepted Student",
+            fill: false,
+            lineTension: 0.0,
+            backgroundColor: "rgba(0, 0, 0, 0)",
+            borderColor: "rgba(0, 122, 42,0.5)",
+            borderCapStyle: 'butt',
+            borderDash: [10, 5],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(0, 122, 42,1)",
+            pointBackgroundColor: "#deff86",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(0, 122, 42,1)",
+            pointHoverBorderColor: "rgba(0, 122, 42,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 0,
+            pointHitRadius: 5,
+            data: {{ pittgpa|tojson }}
+        }
+    ]
+};
+
+var option = {
+	showLines: true,
+    scales: {
+    xAxes: [{
+      scaleLabel: {
+        display: true,
+        fontSize: 14,
+        labelString: 'Semester'
+      }
+    }],
+    yAxes: [{
+      scaleLabel: {
+        display: true,
+        fontSize: 14,
+        labelString: 'GPA'
+      }
+    }]
+  },
+    animation: {
+        duration: 5000
+      }
+};
+var myLineChart = Chart.Line(canvas,{
+	data:data,
+  options:option
+});
+
+
+</script>
+
+
+<div style="width:90px; margin:0 auto;">
+    </div>
+        </div>
+        <div class="card-footer small text-muted"></div>
+      </div>
+      <div class="row">
+        <div class="col-lg-8">
+          <!-- Example Bar Chart Card-->
+          <div class="card mb-3">
+            <div class="card-header">
+              <i class="fa fa-bar-chart"></i> Activity Hours</div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-8 my-auto">
+<canvas id="myBarChart" width="400" height="200"></canvas>
+<script>
+var ctx = document.getElementById("myBarChart");
+var myBarChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ["Medical Volunteering", "Medical Employment", "Shadowing"],
+    datasets: [{
+      label: "Hours",
+      backgroundColor: "rgba(2,117,216,1)",
+      borderColor: "rgba(2,117,216,1)",
+      data: [{{ medvol|tojson }}, {{ medemp|tojson }}, {{ shadow|tojson }}]
+    }]
+  },
+  options: {
+    scales: {
+      xAxes: [{
+        time: {
+          unit: 'month'
+        },
+        gridLines: {
+          display: false
+        },
+        ticks: {
+          maxTicksLimit: 6
+        }
+      }],
+      yAxes: [{
+        ticks: {
+          min:0
+        },
+        gridLines: {
+          display: true
+        }
+      }],
+    },
+    legend: {
+      display: false
+    }
+  }
+});
+
+</script>
+                </div>
+                <div class="col-sm-4 text-center my-auto">
+                  <div class="h4 mb-0 text-primary">{{ totvol }}</div>
+                  <div class="small text-muted">Total Volunteer Hours</div>
+                  <hr>
+                  <div class="h4 mb-0 text-warning">{{ totres }}</div>
+                  <div class="small text-muted">Total Research Hours</div>
+                  <hr>
+                  <div class="h4 mb-0 text-success">{{ totclin }}</div>
+                  <div class="small text-muted">Total Clinical Hours</div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer small text-muted"></div>
+          </div>
+          <!-- Card Columns Example Social Feed-->
+          <div class="mb-0 mt-4">
+            <i id="messageredirect" class="fa fa-newspaper-o"></i> News Feed</div>
+        </div>
+          <!-- /Card Columns-->
+            <hr>
+
+            <br>
+        <div class="col-lg-4">
+          <!-- Example Pie Chart Card-->
+          <div class="card mb-3">
+            <div class="card-header">
+              <i class="fa fa-pie-chart"></i> MCAT Breakdown</div>
+            <div class="card-body">
+              <canvas id="myBarChart1" width="400" height="239"></canvas>
+<script>
+var ctx = document.getElementById("myBarChart1");
+var myBarChart1 = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ["C/P", "CARS", "B/B", "P/S"],
+    datasets: [{
+      label: "Your Score",
+      backgroundColor: "rgba(235,43,54,1)",
+      borderColor: "rgba(235,43,54,1)",
+      data: {{ mcat|tojson }}
+    },{
+      label: "Average Accepted Student Score",
+      backgroundColor: "rgba(0, 122, 42,0.75)",
+      borderColor: "rgba(0, 122, 42,0.75)",
+      data: {{ pittmcat|tojson }}
+    }]
+  },
+  options: {
+    scales: {
+      xAxes: [{
+        time: {
+          unit: 'month'
+        },
+        gridLines: {
+          display: false
+        },
+        ticks: {
+          maxTicksLimit: 6
+        }
+      }],
+      yAxes: [{
+        ticks: {
+          min: 118,
+          max: 132,
+          maxTicksLimit: 14
+        },
+        gridLines: {
+          display: true
+        }
+      }],
+    },
+    legend: {
+      display: false
+    }
+  }
+});
+
+</script>
+ <div class=" text-center my-auto">
+                  <div class="h4 mb-0 text-danger">{{ mcattotal }}</div>
+                  <div class="small text-muted">Your Score</div>
+                </div>
+              </div>
+            <div class="card-footer small text-muted"></div>
+          </div>
+    </div>
+    <!-- /.container-fluid-->
+    <!-- /.content-wrapper-->
+    <footer class="sticky-footer">
+      <div class="container">
+        <div class="text-center">
+          <small>Copyright © 2017</small>
+        </div>
+      </div>
+    </footer>
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fa fa-angle-up"></i>
+    </a>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="login.html">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!--News Feed-->
+<table class="table table-hover table-mc-light-red">
+{% for r in result3 | reverse %}
+<tr>
+    <td style ="word-break:break-all;">
+    <div>
+        <div class="div1"><strong>{{r.title}}</strong></div>
+        <div class="div2">{{ r.postdate }} </div>
+        <br>
+        <div class="div2"><i>Posted by {{ r.userid }}</i></div>
+        <style>
+.div1 {
+float: left;
+}
+
+.div2 {
+    float:right;
+}
+.div2 {
+    float:right;
+    text-align: right;
+}
+    </style>
+            </div>
+            <br>
+            {{r.message}}
+            </td>
+         </tr>
+        {% endfor %}
+    </table>
+
+</div>
+{% endblock %}

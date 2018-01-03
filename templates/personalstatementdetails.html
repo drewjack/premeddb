@@ -1,0 +1,62 @@
+{% extends "layouts/layout1.html" %}
+{% block title %}
+Personal Statement
+{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+<h1>Personal Statement</h1>
+<p>Use this tool to keep track of your many drafts of your Personal Statement!</p>
+<p><strong>Title:</strong> {{ result.title }}</p>
+<p><strong>Personal Statement:</strong> Use the space provided to explain why you want to go to medical school. (Limit: 5300 Characters)</p>
+<!-- Counts Characters-->
+
+<table>
+<form action="{{ url_for('personalstatementdetailsprocess')}}" method="POST">
+<textarea id="essay" rows="4" cols="100" name="essay">{{result.essay}}</textarea>
+<div id="result"></div>
+    <tr>
+            <th></th>
+            <td>
+
+                <button class="btn btn-primary" type="submit" name="update" value="{{ result.id }}"><span class="fa fa-check"></span></button>
+</form>
+                <a href="{{ url_for('personalstatement') }}" style="color: #fb3f00; text-decoration: none;">
+                    <button class="btn btn-danger"><span class="fa fa-remove"></span></button>
+                </a>
+        </td>
+        </tr>
+</table>
+<script>
+function wordCount( val ){
+    var wom = val.match(/\S+/g);
+    return {
+        charactersNoSpaces : val.replace(/\s+/g, '').length,
+        characters         : val.length,
+        words              : wom ? wom.length : 0,
+        lines              : val.split(/\r*\n/).length
+    };
+}
+
+
+var textarea = document.getElementById("essay");
+var result   = document.getElementById("result");
+
+textarea.addEventListener("input", function(){
+  var v = wordCount( this.value );
+  result.innerHTML = (
+      "<br>Characters (no spaces):  "+ v.charactersNoSpaces +
+      ", Characters (and spaces): "+ v.characters +
+      ", Words: "+ v.words +
+      ", Lines: "+ v.lines
+  );
+}, false);
+</script>
+</div>
+
+{% endblock %}

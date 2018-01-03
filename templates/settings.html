@@ -1,0 +1,40 @@
+{% extends "layouts/layout1.html" %}
+{% block title %}
+Account Settings
+{% endblock %}
+{% block content %}
+    <div class="container">
+    <h1>Account Settings</h1>
+    <br>
+    <form action="{{ url_for('deleteaccount') }}">
+    <strong>Contact Email: </strong><i>{{ current_user.email }}</i>
+    <a class="btn btn-success" style="float:right" href="{{ url_for('changeemail') }}">Update contact email</a>
+    <br>
+    <br>
+    <strong>Year: </strong><i>{{ current_user.year }}</i>
+    <a class="btn btn-success" style="float:right" href="{{ url_for('changeyear') }}">Update year</a>
+    <br>
+    <br>
+    <strong>Application Cycle of Interest: </strong><i>{{ current_user.appcycle }}</i>
+    <a class="btn btn-success" style="float:right" href="{{ url_for('changeappcycle') }}">Update application cycle</a>
+    <br>
+    <br>
+    <br>
+    <a class="btn btn-success" style="float:right" href="{{ url_for('changepassword') }}"><strong>Change password</strong></a>
+    <br>
+    <br>
+    <a class="btn btn-danger" id="delete" style="float:right" href="{{ url_for('deleteaccount') }}">Click here to <strong>DELETE</strong> account</a>
+    </form>
+    <script>
+     var myLink = document.getElementById('delete');
+     myLink.onclick = function(){
+     var r = confirm("Are you sure you want to delete your account?");
+     if (r == true) {
+         return;
+        } else {
+        return false;
+        }
+     }
+    </script>
+    </div>
+{% endblock %}

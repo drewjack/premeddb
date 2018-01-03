@@ -1,0 +1,110 @@
+{% extends "layouts/layout1.html" %}
+{% block title %}
+Campus Organizations
+{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>Campus Organizations</h1>
+  <br>
+  <p>Here you can add student organizations on campus for interested students to get in touch with.</p>
+    <div class="container">
+     <table class="table table-hover table-mc-light-blue">
+        <form action="{{ url_for('editorganizations')}}" method="POST">
+        <tr>
+            <th><strong>Organization Name</strong></th>
+            <td style ="word-break:break-all;">
+            <input type="text" placeholder="Name" name="name" value="{{request.form.name}}">
+            </td>
+            </td>
+        </tr>
+        <tr>
+            <th><strong>Description</strong></th>
+            <td style ="word-break:break-all;">
+            <textarea id="message" rows="2" cols="100" placeholder="Description" name="description">{{request.form.description}}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <th><strong>Type</strong></th>
+            <td style ="word-break:break-all;">
+                <select name='type' id="type" style="width: 250px">Activity Type
+                <option value='Pre-Health'>Pre-Health (General)</option>
+                <option value='Pre-Med'>Pre-Med</option>
+                <option value='Pre-Dent'>Pre-Dent</option>
+                <option value='Pre-PA'>Pre-PA</option>
+            </td>
+        </tr>
+        <tr>
+            <th><strong>Website</strong></th>
+            <td style ="word-break:break-all;">
+            <input type="text" placeholder="Website" name="website" value="{{request.form.website}}">
+            </td>
+        </tr>
+        <tr>
+            <th><strong>Facebook</strong></th>
+            <td style ="word-break:break-all;">
+            <input type="text" placeholder="Facebook" name="facebook" value="{{request.form.facebook}}">
+            </td>
+        </tr>
+        <tr>
+            <th><strong>Twitter</strong></th>
+            <td style ="word-break:break-all;">
+            <input type="text" placeholder="Twitter" name="twitter" value="{{request.form.twitter}}">
+            </td>
+        </tr>
+        <tr>
+            <th></th>
+            <td style ="word-break:break-all;"><button class="btn btn-primary" type="submit" name="update" value="Submit"><span class="fa fa-check"></span></button>
+                </form>
+                <a href="{{ url_for('administrator') }}" style="color: #fb3f00; text-decoration: none;">
+                    <button class="btn btn-danger"><span class="fa fa-remove"></span></button>
+                </a>
+            </td>
+        </tr>
+  </table>
+    <br>
+    <hr>
+  <table id="table" class="table table-hover table-mc-light-blue">
+     <thead>
+        <tr>
+          <th onclick="sortTable(0)" >Organization Name <i class="fa fa-sort" aria-hidden="true"></i></th>
+          <th onclick="sortTable(1)">Description <i class="fa fa-sort" aria-hidden="true"></i></th>
+          <th onclick="sortTable(2)">Type <i class="fa fa-sort" aria-hidden="true"></i></th>
+          <th onclick="sortTable(3)">Connect <i class="fa fa-sort" aria-hidden="true"></i></th>
+          <th></th>
+        </tr>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+      </thead>
+        {% for r in result | reverse %}
+          <tr>
+            <td style ="word-wrap: break-word">
+                {{r.name}}
+            </td>
+            <td style ="word-wrap: break-word">
+                {{r.description}}
+            </td>
+            <td style ="word-wrap: break-word">
+                {{r.type}}
+            </td>
+            <td>
+                <a href="{{r.website}}" target="_blank"><span class="fa fa-external-link"></span></a>
+                <a href="{{r.facebook}}" target="_blank"><span class="fa fa-facebook-square"></span></a>
+                <a href="{{r.twitter}}" target="_blank"><span class="fa fa-twitter"></span></a>
+            </td>
+            <td>
+            <form action="{{ url_for('deleteorganizations') }}" method="post" >
+            <button class="btn btn-danger" type="submit" name="organizationsdelete" value="{{ r.id }}">
+            <span class="fa fa-trash"></span></button>
+            </form>
+            </td>
+          </tr>
+        {% endfor %}
+         </table>
+</div>
+</div>
+{% endblock %}

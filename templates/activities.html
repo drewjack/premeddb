@@ -1,0 +1,112 @@
+{% extends "layouts/layout1.html" %}
+{% block title %}
+Activities
+{% endblock %}
+{% block content %}
+    <div class="container">
+      <h1>Activities Information</h1>
+      <br>
+      <p>This tool will enable you to clearly organize all of your activities in a format identical to that used on AMCAS. Click on the edit button once an entry is created to add additional information. Certain key summary statistics from this section are aggregated and visualized on the dashboard.</p>
+      <p><i>Tip: Organize category information alphabetically by clicking on a section header</i></p>
+
+     <table id="table" class="table table-hover table-mc-light-blue">
+     <thead>
+        <tr>
+          <th onclick="sortTable(0)">Activity <i class="fa fa-sort" aria-hidden="true"></i></th>
+          <th onclick="sortTable(1)">Type <i class="fa fa-sort" aria-hidden="true"></i></th>
+          <th onclick="sortTable(2)">Reference <i class="fa fa-sort" aria-hidden="true"></i></th>
+        <!--
+          <th onclick="sortTable(3)">Start Date</th>
+          <th onclick="sortTable(4)">End Date</th>
+          -->
+          <th onclick="sortTable(5)">Total Hours <i class="fa fa-sort" aria-hidden="true"></i></th>
+          <th></th>
+          <th></th>
+        </tr>
+        <form onsubmit="return myFunction();" action="{{ url_for('activities') }}" method="post">
+        <script>
+        function myFunction() {
+            var x = document.getElementById("myText").value;
+            if(isNaN(x))
+            {
+                alert("Please enter a number in the Total Hours column");
+                return false;
+            }
+        }
+        </script>
+        <tr>
+         <th name="activity" id="activity" style="width: 100px"><input type="text" placeholder="Activity" name="activity" value="{{ request.form.activity }}"></th>
+         <th>
+          <select name='type' id="type" style="width: 250px">Activity Type
+          <option value=''>Type</option>
+          <option value='artistic endeavors'>artistic endeavors</option>
+          <option value='community service/volunteer – medical/clinical'>community service/volunteer – medical/clinical</option>
+          <option value='community service/volunteer – not medical/clinical'>community service/volunteer – not medical/clinical</option>
+          <option value='conferences attended'>conferences attended</option>
+          <option value='extracurricular activities'>extracurricular activities</option>
+          <option value='hobbies'>hobbies</option>
+          <option value='honors/awards/recognition'>honors/awards/recognition</option>
+          <option value='honors/awards/recognition'>honors/awards/recognition</option>
+          <option value='intercollegiate athletics'>intercollegiate athletics</option>
+          <option value='leadership – not listed elsewhere'>leadership – not listed elsewhere</option>
+          <option value='military service'>military service</option>
+          <option value='other'>other</option>
+          <option value='paid employment – medical/clinical'>paid employment – medical/clinical</option>
+          <option value='paid employment – not medical/clinical'>paid employment – not medical/clinical</option>
+          <option value='physician shadowing/clinical observation'>physician shadowing/clinical observation</option>
+          <option value='presentations/posters'>presentations/posters</option>
+          <option value='publications'>publications</option>
+          <option value='research/lab'>research/lab</option>
+          <option value='teaching/tutoring/teaching assistant'>teaching/tutoring/teaching assistant</option>
+          </select>
+         </th>
+         <th><input type="text" placeholder="Reference" name="reference" value="{{ request.form.reference }}"></th>
+         <!--
+         <th> <input type="date" placeholder="Start Date" name="startdate" value="{{ request.form.startdate }}"></th>
+         <th><input type="date" placeholder="End Date" name="enddate" value="{{ request.form.enddate }}"></th>
+         -->
+         <th><input id="myText" type="text" placeholder="Hours" name="hours" value="{{ request.form.hours }}"></th>
+         <th><button class="btn btn-primary" type="submit" value="Submit"><span class="fa fa-plus"></span></button></th>
+         <th></th>
+        </tr>
+      </form>
+      </thead>
+        {% for r in result %}
+          <tr>
+            <td style ="word-break:break-all;">
+                {{r.activity}}
+            </td>
+            <td style ="word-break:break-all;">
+                {{r.type}}
+            </td>
+            <td style ="word-break:break-all;">
+                {{r.reference}}
+            </td>
+            <!--
+            <td>
+                {{r.startdate}}
+            </td>
+            <td>
+                {{r.enddate}}
+            </td>
+            -->
+            <td style ="word-break:break-all;">
+                {{r.hours}}
+            </td>
+            <td>
+            <form action="{{ url_for('activitiesdetails') }}" method="post" >
+            <button class="btn btn-success" type="submit" name="activitiesdetails" value="{{ r.id }}">
+            <span class="fa fa-pencil"></span></button>
+            </form>
+            </td>
+            <td>
+            <form action="{{ url_for('deleteactivities') }}" method="post" >
+            <button class="btn btn-danger" type="submit" name="activitiesdelete" value="{{ r.id }}">
+            <span class="fa fa-trash"></span></button>
+            </form>
+            </td>
+          </tr>
+        {% endfor %}
+    </table>
+    </div>
+{% endblock %}

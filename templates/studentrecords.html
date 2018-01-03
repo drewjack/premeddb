@@ -1,0 +1,66 @@
+{% extends "layouts/layout1.html" %}
+{% block title %}
+Admin
+{% endblock %}
+{% block content %}
+<div class="container">
+      <h1>Administrator Portal - Student Records</h1>
+      <br>
+
+     <table id="table" class="table table-hover table-mc-light-blue">
+     <thead>
+        <tr>
+            <th onclick="sortTable(0)">First Name <i class="fa fa-sort" aria-hidden="true"></i></th>
+            <th onclick="sortTable(1)">Last Name <i class="fa fa-sort" aria-hidden="true"></i></th>
+            <th onclick="sortTable(2)">Email <i class="fa fa-sort" aria-hidden="true"></i></th>
+            <th></th>
+            <th></th>
+        </tr>
+        <form onsubmit="return myFunction();" action="{{ url_for('studentrecords') }}" method="post">
+        <tr>
+         <th name="firstname" id="firstname" style="width: 100px"><input type="text" placeholder="First Name" name="firstname" value="{{ request.form.firstname }}"></th>
+         <th name="lastname" id="lastname" style="width: 100px"><input type="text" placeholder="Last Name" name="lastname" value="{{ request.form.lastname }}"></th>
+         <th><input type="text" placeholder="Email" name="email" value="{{ request.form.email }}"></th>
+         <th><button class="btn btn-primary" type="submit" value="Submit"><span class="fa fa-search"></span></button></th>
+         <th></th>
+        </tr>
+      </form>
+      </thead>
+        {% for r in result %}
+          <tr>
+            <td style ="word-break:break-all;">
+                {{r.firstname}}
+            </td>
+            <td style ="word-break:break-all;">
+                {{r.lastname}}
+            </td>
+            <td style ="word-break:break-all;">
+                {{r.email}}
+            </td>
+            <td>
+            <form action="{{ url_for('userdetails') }}" method="post" >
+            <button class="btn btn-success" id="delete" type="submit" name="userdetails" value="{{ r.id }}">
+            <span class="fa fa-pencil"></span></button>
+            </form>
+            </td>
+            <td>
+            <form onsubmit="return myFunction();" action="{{ url_for('deleteuser') }}" method="post" >
+            <button class="btn btn-danger" id="delete1"  type="submit" name="userdelete" value="{{ r.id }}">
+            <span class="fa fa-trash"></span></button>
+            </form>
+            </td>
+          </tr>
+        {% endfor %}
+        <script>
+         function myFunction() {
+         var r = confirm("Are you sure you want to delete this account?");
+         if (r == true) {
+             return;
+            } else {
+            return false;
+            }
+         }
+        </script>
+    </table>
+    </div>
+{% endblock %}

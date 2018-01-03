@@ -1,0 +1,45 @@
+{% extends "layouts/layout1.html" %}
+{% block title %}
+Campus Organizations
+{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>Campus Organizations</h1>
+  <br>
+  <p>Here is a list of several many of the student organizations on campus. We encourage you to get in touch with organizations you are interested in joining to learn more about what they have to offer.</p>
+<table id="table" class="table table-hover table-mc-light-blue">
+     <thead>
+        <tr>
+          <th onclick="sortTable(0)">Organization <i class="fa fa-sort" aria-hidden="true"></i></th>
+          <th onclick="sortTable(1)">Description <i class="fa fa-sort" aria-hidden="true"></i></th>
+          <th onclick="sortTable(2)">Type <i class="fa fa-sort" aria-hidden="true"></i></th>
+          <th onclick="sortTable(3)">Connect <i class="fa fa-sort" aria-hidden="true"></i></th>
+        </tr>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+      </thead>
+        {% for r in result | reverse %}
+          <tr>
+            <td style ="word-wrap: break-word">
+                {{r.name}}
+            </td>
+            <td style ="word-wrap: break-word">
+                {{r.description}}
+            </td>
+            <td style ="word-wrap: break-word">
+                {{r.type}}
+            </td>
+            <td>
+                <a href="{{r.website}}" target="_blank"><span class="fa fa-external-link"></span></a>
+                <a href="{{r.facebook}}" target="_blank"><span class="fa fa-facebook-square"></span></a>
+                <a href="{{r.twitter}}" target="_blank"><span class="fa fa-twitter"></span></a>
+            </td>
+          </tr>
+        {% endfor %}
+         </table>
+</div>
+{% endblock %}

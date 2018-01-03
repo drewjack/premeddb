@@ -1,0 +1,238 @@
+{% extends "layouts/layout1.html" %}
+{% block title %}
+Status
+{% endblock %}
+{% block content %}
+    <div class="container">
+      <h1>Medical School Details</h1>
+     <table id="table" class="table table-hover table-mc-light-blue">
+        <form action="{{ url_for('statusdetailsprocess')}}" method="POST">
+        <tr>
+            <th>Medical School</th>
+            <td style ="word-break:break-all;">{{result.university}}</td>
+        </tr>
+        <tr>
+            <th>Information</th>
+            <td style ="word-break:break-all;">
+                <i>Official Website</i>: <a href="{{ medicalschool.homeurl }}" target="_blank"><span class="fa fa-external-link"></span></a>
+                <br>
+                <i>Wikipedia</i>: <a href="{{ medicalschool.wiki }}" target="_blank"><span class="fa fa-external-link"></span></a>
+                <br>
+                <i>State:</i> {{ medicalschool.state }} /  <i>City:</i> {{ medicalschool.city }}
+                <br>
+                <i>Est.</i> {{ medicalschool.year }}
+            </td>
+        </tr>
+        <tr>
+            <th>Primary</th>
+            <td style ="word-break:break-all;">
+            <select name='primary'>
+              <option value='{{result.primary}}'>{{result.primary}}</option>
+              <option value='Not Submitted'>Not Submitted</option>
+              <option value='Submitted'>Submitted</option>
+            </select>
+            </td>
+         </tr>
+         <tr>
+            <th>Secondary</th>
+            <td style ="word-break:break-all;">
+            <select name='secondary'>
+              <option value='{{result.secondary}}'>{{result.secondary}}</option>
+              <option value='N/A'>N/A</option>
+              <option value='Received'>Received</option>
+              <option value='Submitted'>Submitted</option>
+            </select>
+            </td>
+         </tr>
+         <tr>
+            <th>Interview</th>
+            <td style ="word-break:break-all;">
+              <input type="date" placeholder="Interview Date" name="interview" value="{{result.interview}}">
+            <div class="div2">
+            <i>Practice Interview Questions: </i><a href="/static/additionalfiles/mockinterviewquestions.docx">General</a>, <a href="https://schools.studentdoctor.net/schools/2/allopathic-medical-school-interview-feedback/1">School Specific</a>
+           </div>
+            </td>
+         </tr>
+         <tr>
+            <th>Offer</th>
+            <td style ="word-break:break-all;">
+            <select name='offer'>
+              <option value = '{{result.offer}}'>{{result.offer}}</option>
+              <option value='N/A'>N/A</option>
+              <option value='Yes'>Yes</option>
+              <option value='No'>No</option>
+            </select>
+            </td>
+         </tr>
+        <tr>
+            <th></th>
+            <td>
+            <i>Tip: While answering prompts, it is helpful to address specific parts of a school's program as well as refer to its mission statement.</i>
+            </td>
+        </tr>
+        <tr>
+            <th>Essay 1 Prompt</th>
+            <td style ="word-break:break-all;">
+            <textarea rows="2" cols="100" name = "essay1p">{{result.essay1p}}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <th>Essay 1 Answer</th>
+            <td style ="word-break:break-all;">
+            <textarea id="essay1" rows="6" cols="100" name = "essay1a">{{result.essay1a}}</textarea>
+            <div id="result1"></div>
+            </td>
+        </tr>
+        <tr>
+            <th>Essay 2 Prompt</th>
+            <td style ="word-break:break-all;">
+            <textarea rows="2" cols="100" name = "essay2p">{{result.essay2p}}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <th>Essay 2 Answer</th>
+            <td style ="word-break:break-all;">
+            <textarea id="essay2" rows="6" cols="100" name = "essay2a">{{result.essay2a}}</textarea>
+            <div id="result2"></div>
+            </td>
+        </tr>
+        <tr>
+            <th>Essay 3 Prompt</th>
+            <td style ="word-break:break-all;">
+            <textarea rows="2" cols="100" name = "essay3p">{{result.essay3p}}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <th>Essay 3 Answer</th>
+            <td style ="word-break:break-all;">
+            <textarea id="essay3" rows="6" cols="100" name = "essay3a">{{result.essay3a}}</textarea>
+            <div id="result3"></div>
+            </td>
+        </tr>
+        <tr>
+            <th>Essay 4 Prompt</th>
+            <td style ="word-break:break-all;">
+            <textarea rows="2" cols="100" name = "essay4p">{{result.essay4p}}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <th>Essay 4 Answer</th>
+            <td style ="word-break:break-all;">
+            <textarea id="essay4" rows="6" cols="100" name = "essay4a">{{result.essay4a}}</textarea>
+            <div id="result4"></div>
+            </td>
+        </tr>
+        <tr>
+            <th>Essay 5 Prompt</th>
+            <td style ="word-break:break-all;">
+            <textarea rows="2" cols="100" name = "essay5p">{{result.essay5p}}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <th>Essay 5 Answer</th>
+            <td style ="word-break:break-all;">
+            <textarea id="essay5" rows="6" cols="100" name = "essay5a">{{result.essay5a}}</textarea>
+            <div id="result5"></div>
+            </td>
+        </tr>
+        <tr>
+            <th></th>
+            <td style ="word-break:break-all;">
+                <button class="btn btn-primary" type="submit" name="update" value="{{ result.id }}"><span class="fa fa-check"></span></button>
+                </form>
+                <a href="{{ url_for('status') }}" style="color: #fb3f00; text-decoration: none;">
+                    <button class="btn btn-danger"><span class="fa fa-remove"></span></button>
+                </a>
+            </td>
+        </tr>
+     </table>
+
+<script>
+function wordCount( val ){
+    var wom = val.match(/\S+/g);
+    return {
+        charactersNoSpaces : val.replace(/\s+/g, '').length,
+        characters         : val.length,
+        words              : wom ? wom.length : 0,
+        lines              : val.split(/\r*\n/).length
+    };
+}
+
+
+var textarea1 = document.getElementById("essay1");
+var result1   = document.getElementById("result1");
+var textarea2 = document.getElementById("essay2");
+var result2   = document.getElementById("result2");
+var textarea3 = document.getElementById("essay3");
+var result3   = document.getElementById("result3");
+var textarea4 = document.getElementById("essay4");
+var result4   = document.getElementById("result4");
+var textarea5 = document.getElementById("essay5");
+var result5   = document.getElementById("result5");
+
+textarea1.addEventListener("input", function(){
+  var v = wordCount( this.value );
+  result1.innerHTML = (
+      "<br>Characters (no spaces):  "+ v.charactersNoSpaces +
+      ", Characters (and spaces): "+ v.characters +
+      ", Words: "+ v.words +
+      ", Lines: "+ v.lines
+  );
+}, false);
+
+textarea2.addEventListener("input", function(){
+  var v = wordCount( this.value );
+  result2.innerHTML = (
+      "<br>Characters (no spaces):  "+ v.charactersNoSpaces +
+      ", Characters (and spaces): "+ v.characters +
+      ", Words: "+ v.words +
+      ", Lines: "+ v.lines
+  );
+}, false);
+
+textarea3.addEventListener("input", function(){
+  var v = wordCount( this.value );
+  result3.innerHTML = (
+      "<br>Characters (no spaces):  "+ v.charactersNoSpaces +
+      ", Characters (and spaces): "+ v.characters +
+      ", Words: "+ v.words +
+      ", Lines: "+ v.lines
+  );
+}, false);
+
+textarea4.addEventListener("input", function(){
+  var v = wordCount( this.value );
+  result4.innerHTML = (
+      "<br>Characters (no spaces):  "+ v.charactersNoSpaces +
+      ", Characters (and spaces): "+ v.characters +
+      ", Words: "+ v.words +
+      ", Lines: "+ v.lines
+  );
+}, false);
+
+textarea5.addEventListener("input", function(){
+  var v = wordCount( this.value );
+  result5.innerHTML = (
+      "<br>Characters (no spaces):  "+ v.charactersNoSpaces +
+      ", Characters (and spaces): "+ v.characters +
+      ", Words: "+ v.words +
+      ", Lines: "+ v.lines
+  );
+}, false);
+</script>
+
+ <style>
+    .div1 {
+float: left;
+}
+
+.div2 {
+float:right;
+}
+.div2 {
+float:right;
+text-align: right;
+}s
+</style>
+    </div>
+{% endblock %}

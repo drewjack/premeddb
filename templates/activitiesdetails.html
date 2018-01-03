@@ -1,0 +1,112 @@
+{% extends "layouts/layout1.html" %}
+{% block title %}
+Activities
+{% endblock %}
+{% block content %}
+    <div class="container">
+      <h1>Activities Details</h1>
+     <table id="table" class="table table-hover table-mc-light-blue">
+        <form action="{{ url_for('activitiesdetailsprocess')}}" method="POST">
+        <tr>
+            <th>Activity</th>
+            <td style ="word-break:break-all;">{{result.activity}}</td>
+        </tr>
+        <tr>
+            <th>Type</th>
+            <td style ="word-break:break-all;">
+            <select name='type'>
+              <option value='{{result.type}}'>{{result.type}}</option>
+              <option value=''>Type</option>
+              <option value='artistic endeavors'>artistic endeavors</option>
+              <option value='community service/volunteer – medical/clinical'>community service/volunteer – medical/clinical</option>
+              <option value='community service/volunteer – not medical/clinical'>community service/volunteer – not medical/clinical</option>
+              <option value='conferences attended'>conferences attended</option>
+              <option value='extracurricular activities'>extracurricular activities</option>
+              <option value='hobbies'>hobbies</option>
+              <option value='honors/awards/recognition'>honors/awards/recognition</option>
+              <option value='honors/awards/recognition'>honors/awards/recognition</option>
+              <option value='intercollegiate athletics'>intercollegiate athletics</option>
+              <option value='leadership – not listed elsewhere'>leadership – not listed elsewhere</option>
+              <option value='military service'>military service</option>
+              <option value='other'>other</option>
+              <option value='paid employment – medical/clinical'>paid employment – medical/clinical</option>
+              <option value='paid employment – not medical/clinical'>paid employment – not medical/clinical</option>
+              <option value='physician shadowing/clinical observation'>physician shadowing/clinical observation</option>
+              <option value='presentations/posters'>presentations/posters</option>
+              <option value='publications'>publications</option>
+              <option value='research/lab'>research/lab</option>
+              <option value='teaching/tutoring/teaching assistant'>teaching/tutoring/teaching assistant</option>
+              </select>
+            </select>
+            </td>
+         </tr>
+         <tr>
+            <th>Total Hours</th>
+            <td style ="word-break:break-all;">
+            <input type="text" placeholder="Hours" name="hours" value="{{result.hours}}">
+            </td>
+         </tr>
+         <tr>
+            <th>Reference</th>
+            <td style ="word-break:break-all;">
+            <input type="text" placeholder="Reference" name="reference" value="{{result.reference}}">
+            </td>
+         </tr>
+         <tr>
+            <th>Start Date</th>
+            <td style ="word-break:break-all;">
+            <input type="date" placeholder="Start Date" name="startdate" value="{{result.startdate}}">
+            </td>
+         </tr>
+         <tr>
+            <th>End Date</th>
+            <td style ="word-break:break-all;">
+            <input type="date" placeholder="End Date" name="enddate" value="{{result.enddate}}">
+            </td>
+         </tr>
+        <tr>
+            <th>Description</th>
+            <td style ="word-break:break-all;">
+            <textarea id="description" rows="2" cols="100" name = "description">{{result.description}}</textarea>
+            <div id="result"></div>
+            </td>
+        </tr>
+        <tr>
+            <th></th>
+            <td style ="word-break:break-all;"><button class="btn btn-primary" type="submit" name="update" value="{{ result.id }}"><span class="fa fa-check"></span></button>
+                </form>
+                <a href="{{ url_for('activities') }}" style="color: #fb3f00; text-decoration: none;">
+                    <button class="btn btn-danger"><span class="fa fa-remove"></span></button>
+                </a>
+            </td>
+        </tr>
+
+     </table>
+
+<script>
+function wordCount( val ){
+    var wom = val.match(/\S+/g);
+    return {
+        charactersNoSpaces : val.replace(/\s+/g, '').length,
+        characters         : val.length,
+        words              : wom ? wom.length : 0,
+        lines              : val.split(/\r*\n/).length
+    };
+}
+
+
+var textarea = document.getElementById("description");
+var result   = document.getElementById("result");
+
+textarea.addEventListener("input", function(){
+  var v = wordCount( this.value );
+  result.innerHTML = (
+      "<br>Characters (no spaces):  "+ v.charactersNoSpaces +
+      " Characters (and spaces): "+ v.characters +
+      " Words: "+ v.words +
+      " Lines: "+ v.lines
+  );
+}, false);
+</script>
+</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "layouts/layout1.html" %}
+{% block title %}
+Posting
+{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>Post</h1>
+  <br>
+  <p>Use the field below to post message to student newsfeeds.</p>
+    <div class="container">
+     <table id="table" class="table table-hover table-mc-light-blue">
+        <form action="{{ url_for('post')}}" method="POST">
+        <tr>
+            <th><strong>Recipient(s):</strong></th>
+            <td style ="word-break:break-all;">
+            <input type="checkbox" name="Freshman" value="Freshman"> Freshman
+            <input type="checkbox" name="Sophomore" value="Sophomore"> Sophomore
+            <input type="checkbox" name="Junior" value="Junior"> Junior
+            <input type="checkbox" name="Senior" value="Senior"> Senior
+            <input type="checkbox" name="appcycle" value="appcycle"> Current Applicants
+            </td>
+         </tr>
+        <tr>
+            <th><strong>Title:</strong></th>
+            <td style ="word-break:break-all;">
+            <input type="text" placeholder="Title" name="title" value="{{request.form.title}}">
+            </td>
+         </tr>
+        <tr>
+            <th><strong>Message</strong></th>
+            <td style ="word-break:break-all;">
+            <textarea id="message" rows="2" cols="100" placeholder="Message" name = "message">{{request.form.message}}</textarea>
+            </td>
+        </tr>
+        <tr>
+            <th></th>
+            <td style ="word-break:break-all;"><button class="btn btn-primary" type="submit" name="update" value="Submit"><span class="fa fa-check"></span></button>
+                </form>
+                <a href="{{ url_for('administrator') }}" style="color: #fb3f00; text-decoration: none;">
+                    <button class="btn btn-danger"><span class="fa fa-remove"></span></button>
+                </a>
+            </td>
+        </tr>
+     </table>
+    <br>
+    <hr>
+    <table class="table table-hover table-mc-light-red">
+        {% for r in result | reverse %}
+        <tr>
+            <td style ="word-break:break-all;">
+            <div>
+                <div class="div1"><strong>{{r.title}}</strong>    (Sent to: {{ r.recipient }})</div>
+                <div class="div2">{{ r.postdate }} </div>
+                <br>
+                <div class="div2"><i>Posted by {{ r.userid }}</i></div>
+
+            </div>
+            <br>
+            {{r.message}}
+            </td>
+            <td style ="word-break:break-all;">
+            <form action="{{ url_for('deletepost') }}" method="post" >
+            <button class="btn btn-danger" type="submit" name="postdelete" value="{{ r.id }}">
+            <span class="fa fa-trash"></span></button>
+            </form>
+            </td>
+         </tr>
+        {% endfor %}
+    <style>
+        .div1 {
+    float: left;
+}
+
+.div2 {
+    float:right;
+}
+.div2 {
+    float:right;
+    text-align: right;
+}
+    </style>
+    </table>
+</div>
+{% endblock %}

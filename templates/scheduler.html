@@ -1,0 +1,104 @@
+{% extends "layouts/layout1.html" %}
+{% block title %}
+Scheduler
+{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+<h1>Scheduler</h1>
+  <p>Use this tool to keep track of your schedules and ensure you are meeting your credit and course requirements.</p>
+  <p>Maximum of <strong>6</strong> schedules allowed to be held at one time</p>
+
+  <ol>
+    <li>Download the scheduling template: <a href="/static/additionalfiles/schedulertemplate.xlsx" download><button class="btn btn-success"><span class="fa fa-file-excel-o"></span></button></a></li>
+    <li>Choose at least one major, the required premed courses, and the general education requirements for your school. <a href="http://www.honorscollege.pitt.edu/sites/default/files/premed/Plan%20of%20Study.docx" target="_blank">Sample Plan of Study</a></li>
+    <li>Upload the finalized template for storage in the scheduler.</li>
+  </ol>
+
+  <p>
+  <strong>Premed Required Courses: </strong><a href="http://www.honorscollege.pitt.edu/sites/default/files/premed/Prerequisite%20Courses%20for%20Medicine%20and%20Dentistry.docx" target="_blank">Requirements</a>
+  <br>
+  <strong>Next Semester Course Offerings: </strong><a href="http://www.courses.as.pitt.edu/" target="_blank">Course Descriptions</a>
+  <br>
+  <strong>AP/IB Course Conversion: </strong><a href="https://oafa.pitt.edu/apply/ap-ib-credit/" target="_blank">AP/IB Credit</a>
+  <br>
+  <strong>General Education/Major/Minor Requirements:</strong>
+  <ul>
+  <li>
+  <u>Dietrich School of Arts and Sciences:</u> <a href="https://www.asundergrad.pitt.edu/sites/default/files/Gen%20Eds.pdf" target="_blank">Gen-Ed Requirements</a>, <a href="https://www.asundergrad.pitt.edu/sites/default/files/general_education_catalog.pdf" target="_blank">Gen-Ed Courses</a>  / <a href="https://www.asundergrad.pitt.edu/academic-experience/majors-minors-and-certificates" target="_blank">Majors/Minors Requirements</a>
+  </li>
+  <li>
+  <u>College of Business Administration:</u>
+  <a href="http://www.cba.pitt.edu/academics/arts-sciences" target="_blank">Gen-Ed Requirements</a> /
+  <a href="http://www.cba.pitt.edu/academics/majors" target="_blank">Majors/Minors Requirements</a>
+  </li>
+  <li>
+  <u>Swanson Engineering:</u>
+  <a href="https://www.asundergrad.pitt.edu/sites/default/files/general_education_catalog.pdf" target="_blank">Gen-Ed Requirements</a> /
+  <a href="http://www.engineering.pitt.edu/Departments/Bioengineering/_Content/Programs/Undergraduate/BioE-UG-Program-Description/" target="_blank">Bioengineering</a>,
+  <a href="http://www.engineering.pitt.edu/Departments/Chemical-Petroleum/_Content/Undergraduate/Requirements-and-Electives/" target="_blank">Chemical & Petroleum</a>,
+  <a href="https://catalog.upp.pitt.edu/preview_program.php?catoid=72&poid=23223#CivilEngineeringUndergraduateCurriculum" target="_blank">Civil & Environmental</a>,
+  <a href="http://www.engineering.pitt.edu/electrical/undergraduate/" target="_blank">Electrical & Computer</a>,
+  <a href="http://www.engineering.pitt.edu/Departments/Industrial/_Content/Undergraduate/Undergraduate-Curriculum/" target="_blank">Industrial</a>,
+  <a href="http://www.engineering.pitt.edu/Departments/MEMS/_Content/Undergraduate/Mechanical-Engineering-Curriculum/" target="_blank">Mechanical & Materials</a>
+  </li>
+  </ul>
+  </p>
+
+<p><i>Instructions: 1) Create a name for your schedule. 2) Choose the appropriate .xlsx or .xls file. 3) Click upload.</i></p>
+<form onsubmit="return myFunction();" method=POST enctype=multipart/form-data action="{{ url_for('scheduler') }}" >
+    <input type="text" placeholder="Enter Schedule Name" name="schedulename" value="{{ request.form.schedulename }}">
+    <input id="myFile" type="file" name="inputfile" accept=".xlsx, .xls">
+    <button class="btn btn-warning" type="submit" value="Submit">
+    <span class="fa fa-upload"></span></button>
+</form>
+<script>
+        function myFunction() {
+            if( document.getElementById("myFile").files.length == 0 )
+            {
+                alert("Please choose a file before uploading");
+                return false;
+            }
+        }
+</script>
+
+<br>
+<table id="table" class="table table-hover table-mc-light-blue">
+      <thead>
+        <tr>
+          <th>Schedule Name</th>
+          <th>Schedule File Name</th>
+          <th>File</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+        {% for r in result %}
+          <tr>
+            <td style ="word-break:break-all;">
+                {{r.schedulename}}
+            </td>
+            <td style ="word-break:break-all;">
+                {{r.schedule}}
+            </td>
+            <td style ="word-break:break-all;">
+                <form action="{{ url_for('schedulerdownload') }}" method="post">
+                <button class="btn btn-primary" type="submit"  name="schedulerdownload" value="{{ r.id }}"><span class="fa fa-download"></span></button>
+                </form>
+            </td>
+            <td style ="word-break:break-all;">
+            <form action="{{ url_for('deletescheduler') }}" method="post">
+            <button class="btn btn-danger" type="submit" name="schedulerdelete" value="{{ r.id }}">
+            <span class="fa fa-trash"></span></button>
+            </form>
+            </td>
+          </tr>
+        {% endfor %}
+</table>
+</div>
+
+{% endblock %}

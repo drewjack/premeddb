@@ -1,0 +1,76 @@
+{% extends "layouts/layout1.html" %}
+{% block title %}
+Academics
+{% endblock %}
+{% block content %}
+    <div class="container">
+      <h1>Reference Details</h1>
+     <table id="table" class="table table-hover table-mc-light-blue">
+        <form action="{{ url_for('academicsdetailsprocess')}}" method="POST">
+        <tr>
+            <th>Name</th>
+            <td style ="word-break:break-all;">
+            {{result.name}}
+            </td>
+         </tr>
+         <tr>
+            <th>Email</th>
+            <td style ="word-break:break-all;">
+            <input type="text" placeholder="Email" name="email" value="{{result.email}}">
+            </td>
+         </tr>
+         <tr>
+            <th>Type</th>
+            <td style ="word-break:break-all;">
+            <select name='type'>
+              <option value='{{result.type}}'>{{result.type}}</option>
+              <option value='Science - Academic'>Science - Academic</option>
+              <option value='Humanities - Academic'>Humanities - Academic</option>
+              <option value='Research'>Research</option>
+              <option value='Volunteering'>Volunteering</option>
+              <option value='Leadership'>Leadership</option>
+            </select>
+            </td>
+         </tr>
+         <tr>
+            <th>Status</th>
+         <td style ="word-break:break-all;">
+            <select name='status'>
+              <option value = '{{result.status}}'>{{result.status}}</option>
+              <option value='Requested'>Requested</option>
+              <option value='Materials Sent'>Materials Sent</option>
+              <option value='Letter Submitted'>Letter Submitted</option>
+              <option value='Thank You Letter Sent'>Thank You Letter Sent</option>
+            </select>
+            </td>
+        </tr>
+        <tr>
+            <th></th>
+            <td style ="word-break:break-all;">
+                <button class="btn btn-primary" type="submit" name="update" value="{{ result.id }}"><span class="fa fa-check"></span></button>
+                </form>
+                <a href="{{ url_for('academics') }}" style="color: #fb3f00; text-decoration: none;">
+                    <button class="btn btn-danger"><span class="fa fa-remove"></span></button>
+                </a>
+            </td>
+        </tr>
+     </table>
+    <br>
+    <h2>Reference Example Email Templates</h2>
+    <h4><u>Request</u></h4>
+        <p>Dear [Reference Name],</p>
+        <p>I hope you are having a wonderful start to the summer holidays! I thoroughly enjoyed being in your statistics class this past fall, learning much about the theoretical underpinnings of statistical theory. I eventually hope to apply this understanding to a career in medicine. At the start of this past semester I asked if you were open to writing a letter of recommendation for me, and I just want to confirm that you are still comfortable with writing me a strong letter of recommendation. The medical school letter is due May 30th. Please let me know if you would feel comfortable writing me a strong letter of recommendation. I have attached my personal statement, resume, and transcript for reference. I look forward to hearing from you soon!</p>
+        <p>Sincerely,</p>
+        <p>[Your Name]</p>
+    <h4><u>Follow-up</u></h4>
+        <p>Dear [Reference Name],</p>
+        <p>I hope you are having a wonderful day! I want to gently remind you that the deadline for submitting the medical recommendation is May 30th. Please let me know if there is anything else you may need and I look forward to hearing from you soon.</p>
+        <p>Sincerely,</p>
+        <p>[Your Name]</p>
+    <h4><u>Thank You</u></h4>
+        <p>Dear [Reference Name],</p>
+        <p>I would like to express my sincerest gratitude for all the help you have offered me during my medical school application. I will be sure to keep you in the loop as I hear back from schools.</p>
+        <p>Sincerely,</p>
+        <p>[Your Name]</p>
+    </div>
+{% endblock %}

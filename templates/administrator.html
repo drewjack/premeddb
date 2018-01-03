@@ -1,0 +1,17 @@
+{% extends "layouts/layout1.html" %}
+{% block title %}
+Settings
+{% endblock %}
+{% block content %}
+    <div class="container">
+    <h1>Administrator Portal</h1>
+    <br>
+    <a href="{{ url_for('studentrecords') }}"><strong>Student Records</strong></a>
+    <br>
+    <br>
+    <a href="{{ url_for('post') }}"><strong>Post</strong></a>
+    <br>
+    <br>
+    <a href="{{ url_for('editorganizations') }}"><strong>Organization List</strong></a>
+    </div>
+{% endblock %}
