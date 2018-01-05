@@ -16,7 +16,7 @@ Dashboard
         <li class="breadcrumb-item">
           <a>Dashboard</a>
         </li>
-        <li class="breadcrumb-item active">Welcome, {{ current_user.firstname }} {{ current_user.lastname }}! {{ admin }}</li>
+        <li class="breadcrumb-item active">Welcome, {{ user.firstname }} {{ user.lastname }}! {{ admin }}</li>
       </ol>
 
         {% with messages = get_flashed_messages() %}

@@ -175,13 +175,13 @@ class Organizations(db.Model):
     website = db.Column(db.String(400))
     facebook = db.Column(db.String(400))
     twitter = db.Column(db.String(400))
+    email = db.Column(db.String(100))
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-identifier = 0
 # Creates class for login form w/ username and password
 class LoginForm(FlaskForm):
     # changed username to PeopleSoft number for now, would have to reset database and change required length
@@ -413,6 +413,13 @@ def administrator():
 @app.route('/studentrecords', methods=['GET', 'POST'])
 @login_required
 def studentrecords():
+    global identifier
+    # Failsafe to make sure idenfitier is set to current user if not previously set
+    try:
+        identifier
+    except:
+        identifier = current_user.id
+
     result = User.query.all()
     if request.method == 'POST':
         result = User.query.filter(User.firstname.startswith(str(request.form['firstname'])), User.lastname.startswith(str(request.form['lastname'])), User.email.startswith(str(request.form['email'])))
@@ -423,6 +430,12 @@ def studentrecords():
 @login_required
 def post():
     global identifier
+    # Failsafe to make sure idenfitier is set to current user if not previously set
+    try:
+        identifier
+    except:
+        identifier = current_user.id
+
     result = Post.query.all()
     if request.method == 'POST':
         title = request.form['title']
@@ -456,6 +469,12 @@ def post():
 @login_required
 def editorganizations():
     global identifier
+    # Failsafe to make sure idenfitier is set to current user if not previously set
+    try:
+        identifier
+    except:
+        identifier = current_user.id
+
     result = Organizations.query.all()
     if request.method == 'POST':
         name = request.form['name']
@@ -464,12 +483,32 @@ def editorganizations():
         website = request.form['website']
         facebook = request.form['facebook']
         twitter = request.form['twitter']
-        signature = Organizations(name=name, description=description, type=type, website=website, facebook=facebook, twitter=twitter)
+        email = request.form['email']
+        signature = Organizations(name=name, description=description, type=type, website=website, facebook=facebook, twitter=twitter, email=email)
         db.session.add(signature)
         db.session.commit()
         result = Organizations.query.all()
     return render_template("editorganizations.html", result=result)
 
+
+@app.route('/editorganizationsdetails', methods=['POST', 'GET'])
+@login_required
+def editorganizationsdetails():
+    result = Organizations.query.filter_by(id=request.form['editorganizationsdetails']).first()
+    return render_template("editorganizationsdetails.html", result=result)
+
+
+@app.route('/editorganizationsprocess', methods=['POST', 'GET'])
+def editorganizationsprocess():
+    edit = Organizations.query.filter_by(id=request.form['update']).first()
+    edit.description = request.form['description']
+    edit.type = request.form['type']
+    edit.website = request.form['website']
+    edit.facebook = request.form['facebook']
+    edit.twitter = request.form['twitter']
+    edit.email = request.form['email']
+    db.session.commit()
+    return redirect(url_for('editorganizations'))
 
 # Functions for all users
 
@@ -478,13 +517,18 @@ def editorganizations():
 @login_required
 def dashboard():
     global identifier
+
+    # Failsafe to make sure idenfitier is set to current user if not previously set
+    try:
+        identifier
+    except:
+        identifier = current_user.id
+
+
     if current_user.admin == 'y':
         admin = " (Admin: " + current_user.firstname + " " + current_user.lastname + " )"
     else:
         admin = ""
-
-    if identifier == 0:
-        identifier = current_user.id
 
     user = User.query.filter_by(id=identifier).first()
     grades = Grades.query.filter_by(userid=identifier).all()
@@ -493,7 +537,7 @@ def dashboard():
     result2 = Post.query.all()
     result3 = []
     for dogs in result2:
-        if current_user.year in dogs.recipient or current_user.appcycle in dogs.recipient:
+        if user.year in dogs.recipient or user.appcycle in dogs.recipient:
             result3.append(dogs)
     ogpachart = [0,0,0,0,0,0,0,0]
     sgpachart = [0,0,0,0,0,0,0,0]
@@ -580,6 +624,13 @@ def dashboard():
 @app.route('/scheduler', methods=['GET', 'POST'])
 @login_required
 def scheduler():
+    global identifier
+    # Failsafe to make sure idenfitier is set to current user if not previously set
+    try:
+        identifier
+    except:
+        identifier = current_user.id
+
     result = Scheduler.query.filter_by(userid=identifier).all()
     if request.method == 'POST':
         if int(Scheduler.query.count()) < 6:
@@ -603,6 +654,13 @@ def schedulerdownload():
 @app.route('/academics', methods=['POST', 'GET'])
 @login_required
 def academics():
+    global identifier
+    # Failsafe to make sure idenfitier is set to current user if not previously set
+    try:
+        identifier
+    except:
+        identifier = current_user.id
+
     grades = Grades.query.filter_by(userid=identifier).all()
     result = Mcat.query.filter_by(userid=identifier).all()
     result1 = References.query.filter_by(userid=identifier).all()
@@ -626,7 +684,6 @@ def academicsdetails():
 
 @app.route('/academicsdetailsprocess', methods=['POST', 'GET'])
 @login_required
-
 def academicsdetailsprocess():
     edit = References.query.filter_by(id=request.form['update']).first()
     edit.email = request.form['email']
@@ -671,6 +728,13 @@ def references():
 @app.route('/activities', methods=['POST', 'GET'])
 @login_required
 def activities():
+    global identifier
+    # Failsafe to make sure idenfitier is set to current user if not previously set
+    try:
+        identifier
+    except:
+        identifier = current_user.id
+
     result = Activities.query.filter_by(userid=identifier).all()
     if request.method == 'POST':
         if request.form['activity'] != '':
@@ -709,6 +773,13 @@ def activitiesdetailsprocess():
 @app.route('/status', methods=['POST', 'GET'])
 @login_required
 def status():
+    global identifier
+    # Failsafe to make sure idenfitier is set to current user if not previously set
+    try:
+        identifier
+    except:
+        identifier = current_user.id
+
     result = Status.query.filter_by(userid=identifier).all()
     medicalschools = Medicalschools.query.all()
     if request.method == 'POST':
@@ -795,6 +866,13 @@ def statusdetailsword():
 @app.route('/personalstatement', methods=['POST', 'GET'])
 @login_required
 def personalstatement():
+    global identifier
+    # Failsafe to make sure idenfitier is set to current user if not previously set
+    try:
+        identifier
+    except:
+        identifier = current_user.id
+
     result = Personal.query.filter_by(userid=identifier).all()
     if request.method == 'POST':
         if request.form['title'] != '':
@@ -850,6 +928,12 @@ def advisors():
 @app.route('/organizations', methods=['POST', 'GET'])
 @login_required
 def organizations():
+    global identifier
+    # Failsafe to make sure idenfitier is set to current user if not previously set
+    try:
+        identifier
+    except:
+        identifier = current_user.id
     result = Organizations.query.all()
     return render_template("organizations.html", result=result)
 
@@ -894,7 +978,6 @@ def settings():
 @login_required
 def changeemail():
     form = ChangeEmailForm()
-
     if form.validate_on_submit():
         user = User.query.filter_by(id=current_user.id).first()
         user.email = form.email.data
@@ -907,7 +990,6 @@ def changeemail():
 @login_required
 def changeyear():
     form = ChangeYearForm()
-
     if form.validate_on_submit():
         user = User.query.filter_by(id=current_user.id).first()
         user.year = form.year.data
@@ -920,7 +1002,6 @@ def changeyear():
 @login_required
 def changeappcycle():
     form = ChangeAppCycleForm()
-
     if form.validate_on_submit():
         user = User.query.filter_by(id=current_user.id).first()
         user.year = form.appcycle.data
@@ -945,7 +1026,7 @@ def changepassword():
 
 # Deletion Routes
 
-#######STILL NEED TO TEST THIS FUNCTION
+
 @app.route('/deleteaccount', methods=['POST', 'GET'])
 @login_required
 def deleteaccount():
@@ -991,7 +1072,7 @@ def deleteorganizations():
     if request.form['organizationsdelete'] != '':
         Organizations.query.filter_by(id=int(request.form['organizationsdelete'])).delete()
         db.session.commit()
-    return redirect(url_for('organizations'))
+    return redirect(url_for('editorganizations'))
 
 
 @app.route('/deletescheduler', methods=['POST', 'GET'])

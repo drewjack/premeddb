@@ -4,6 +4,35 @@ Advisors
 {% endblock %}
 {% block content %}
 <div class="container">
+
+  <div class="card" style="background-color: #f4c79b;">
+    <div class="card-block1" align="center">
+        <h4 class="card-title">Health Professions Overview Sessions</h4>
+        <hr>
+        <div class="column">
+            <strong>Date: </strong><i>Sunday, Jan. 7th</i>
+            <br>
+            <strong>Time: </strong><i>5:00pm-6:00pm</i>
+            <br>
+            <strong>Location: </strong><i>Langley A221</i>
+        </div>
+        <div class="column">
+            <strong>Date: </strong><i>Sunday, Feb. 4th</i>
+            <br>
+            <strong>Time: </strong><i>5:00pm-6:00pm</i>
+            <br>
+            <strong>Location: </strong><i>Langley A221</i>
+        </div>
+        <div class="column">
+            <strong>Date: </strong><i>Sunday, Mar. 18th</i>
+            <br>
+            <strong>Time: </strong><i>5:00pm-6:00pm</i>
+            <br>
+            <strong>Location: </strong><i>Langley A221</i>
+        </div>
+    </div>
+  </div>
+    <br>
 <div class="modal-body row">
   <div class="col-md-6">
     <div class="card" style="background-color: #f1f4ab;">
@@ -99,12 +128,42 @@ Advisors
     float: left;
 }
 
+.card-block1 {
+    padding: 2% 2%;
+}
+            .div1 {
+    float: left;
+}
+
 .div2 {
     float:right;
 }
 .div2 {
     float:right;
     text-align: right;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+/* Create three equal columns that floats next to each other */
+.column {
+    float: left;
+    width: 33.33%;
+    padding: 10px;
+    height: 100px; /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
 }
 </style>
 {% endblock %}

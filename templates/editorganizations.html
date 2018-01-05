@@ -31,6 +31,8 @@ Campus Organizations
                 <option value='Pre-Med'>Pre-Med</option>
                 <option value='Pre-Dent'>Pre-Dent</option>
                 <option value='Pre-PA'>Pre-PA</option>
+                <option value='Volunteering'>Volunteering</option>
+                <option value='Extracurricular'>Extracurricular</option>
             </td>
         </tr>
         <tr>
@@ -52,6 +54,12 @@ Campus Organizations
             </td>
         </tr>
         <tr>
+            <th><strong>E-mail</strong></th>
+            <td style ="word-break:break-all;">
+            <input type="text" placeholder="Email" name="email" value="{{request.form.email}}">
+            </td>
+        </tr>
+        <tr>
             <th></th>
             <td style ="word-break:break-all;"><button class="btn btn-primary" type="submit" name="update" value="Submit"><span class="fa fa-check"></span></button>
                 </form>
@@ -70,6 +78,8 @@ Campus Organizations
           <th onclick="sortTable(1)">Description <i class="fa fa-sort" aria-hidden="true"></i></th>
           <th onclick="sortTable(2)">Type <i class="fa fa-sort" aria-hidden="true"></i></th>
           <th onclick="sortTable(3)">Connect <i class="fa fa-sort" aria-hidden="true"></i></th>
+          <th onclick="sortTable(3)">E-mail <i class="fa fa-sort" aria-hidden="true"></i></th>
+          <th></th>
           <th></th>
         </tr>
         <tr>
@@ -95,6 +105,15 @@ Campus Organizations
                 <a href="{{r.website}}" target="_blank"><span class="fa fa-external-link"></span></a>
                 <a href="{{r.facebook}}" target="_blank"><span class="fa fa-facebook-square"></span></a>
                 <a href="{{r.twitter}}" target="_blank"><span class="fa fa-twitter"></span></a>
+            </td>
+            <td>
+                {{ r.email }}
+            </td>
+            <td style ="word-break:break-all;">
+            <form action="{{ url_for('editorganizationsdetails') }}" method="post" >
+            <button class="btn btn-success" type="submit" name="editorganizationsdetails" value="{{ r.id }}">
+            <span class="fa fa-pencil"></span></button>
+            </form>
             </td>
             <td>
             <form action="{{ url_for('deleteorganizations') }}" method="post" >

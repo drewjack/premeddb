@@ -6,7 +6,10 @@ Campus Organizations
 <div class="container">
   <h1>Campus Organizations</h1>
   <br>
-  <p>Here is a list of several many of the student organizations on campus. We encourage you to get in touch with organizations you are interested in joining to learn more about what they have to offer.</p>
+  <p>Here is a list of several many of the student organizations on campus. We encourage you to get in touch with organizations you are interested in joining to learn more about what they have to offer.
+  <br>
+  <i>Tip: Click the headers to sort by category</i>
+  </p>
 <table id="table" class="table table-hover table-mc-light-blue">
      <thead>
         <tr>
@@ -14,6 +17,7 @@ Campus Organizations
           <th onclick="sortTable(1)">Description <i class="fa fa-sort" aria-hidden="true"></i></th>
           <th onclick="sortTable(2)">Type <i class="fa fa-sort" aria-hidden="true"></i></th>
           <th onclick="sortTable(3)">Connect <i class="fa fa-sort" aria-hidden="true"></i></th>
+          <th onclick="sortTable(4)">E-mail <i class="fa fa-sort" aria-hidden="true"></i></th>
         </tr>
         <tr>
             <th></th>
@@ -37,6 +41,9 @@ Campus Organizations
                 <a href="{{r.website}}" target="_blank"><span class="fa fa-external-link"></span></a>
                 <a href="{{r.facebook}}" target="_blank"><span class="fa fa-facebook-square"></span></a>
                 <a href="{{r.twitter}}" target="_blank"><span class="fa fa-twitter"></span></a>
+            </td>
+            <td>
+                {{ r.email }}
             </td>
           </tr>
         {% endfor %}

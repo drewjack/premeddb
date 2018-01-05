@@ -1,0 +1,71 @@
+{% extends "layouts/layout1.html" %}
+{% block title %}
+Academics
+{% endblock %}
+{% block content %}
+    <div class="container">
+      <h1>Reference Details</h1>
+     <table id="table" class="table table-hover table-mc-light-blue">
+        <form action="{{ url_for('editorganizationsprocess')}}" method="POST">
+        <tr>
+        <th>Organization</th>
+            <td style ="word-break:break-all;">
+            {{result.name}}
+            </td>
+         </tr>
+         <tr>
+         <th>Description</th>
+            <td style ="word-break:break-all;">
+            <textarea id="message" rows="2" cols="100" placeholder="Description" name="description">{{request.form.description}}</textarea>
+            </td>
+         </tr>
+         <tr>
+            <th>Type</th>
+            <td style ="word-break:break-all;">
+                <select name='type' id="type" style="width: 250px">Activity Type
+                <option value='{{ result.type }}'>{{ result.type }}</option>
+                <option value='Pre-Health'>Pre-Health (General)</option>
+                <option value='Pre-Med'>Pre-Med</option>
+                <option value='Pre-Dent'>Pre-Dent</option>
+                <option value='Pre-PA'>Pre-PA</option>
+                <option value='Pre-PA'>Volunteering</option>
+                <option value='Pre-PA'>Extracurricular</option>
+            </td>
+         </tr>
+         <tr>
+        <tr>
+            <th><strong>Website</strong></th>
+            <td style ="word-break:break-all;">
+            <input type="text" placeholder="Website" name="website" value="{{result.website}}">
+            </td>
+        </tr>
+        <tr>
+            <th><strong>Facebook</strong></th>
+            <td style ="word-break:break-all;">
+            <input type="text" placeholder="Facebook" name="facebook" value="{{result.facebook}}">
+            </td>
+        </tr>
+        <tr>
+            <th><strong>Twitter</strong></th>
+            <td style ="word-break:break-all;">
+            <input type="text" placeholder="Twitter" name="twitter" value="{{result.twitter}}">
+            </td>
+        </tr>
+        <th>E-mail</th>
+            <td style ="word-break:break-all;">
+            <input type="text" placeholder="Email" name="email" value="{{result.email}}">
+            </td>
+        </tr>
+        <tr>
+            <th></th>
+            <td style ="word-break:break-all;">
+                <button class="btn btn-primary" type="submit" name="update" value="{{ result.id }}"><span class="fa fa-check"></span></button>
+                </form>
+                <a href="{{ url_for('editorganizations') }}" style="color: #fb3f00; text-decoration: none;">
+                    <button class="btn btn-danger"><span class="fa fa-remove"></span></button>
+                </a>
+            </td>
+        </tr>
+     </table>
+    </div>
+{% endblock %}
