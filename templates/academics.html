@@ -26,7 +26,7 @@ Academics
         {
             var x = document.getElementById("myText").value;
             var y = document.getElementById("myText1").value;
-            if(isNaN(x)||isNaN(y))
+            if(isNaN(x)||isNaN(y)||!x||!y)
             {
                 alert("Please enter a number in the Overall GPA and and Science GPA column");
                 return false;
@@ -98,7 +98,7 @@ Academics
         var a = document.getElementById("myText5").value;
         var b = document.getElementById("myText6").value;
 
-        if(isNaN(x)||isNaN(y)||isNaN(z)||isNaN(a)||isNaN(b))
+        if(isNaN(x)||isNaN(y)||isNaN(z)||isNaN(a)||isNaN(b)||!x||!y||!z||!a||!b)
         {
         alert("Please enter a number in the MCAT section column");
         return false;
@@ -155,7 +155,7 @@ Academics
         {% endfor %}
      </table>
 
-     <h2>References</h2>
+     <h2 id="references">References</h2>
      <p>Use this tool to document who you plan to ask for your letters of recommendations. This will allow you to keep consistent correspondence with your reference. Click the edit button once populated to view sample email templates.</p>
      <table id="table" class="table table-hover table-mc-light-blue">
       <thead>

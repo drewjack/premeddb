@@ -3,6 +3,134 @@
 Information
 {% endblock %}
 {% block content %}
-    <div class="container">
+<div class="container">
+    <div class="card" style="background-color: #f1f4ab;">
+      <div class="card-block">
+            <h4 class="card-title">How to Use this Portal</h4>
+        <hr>
+            <h5>About</h5>
+              <p>Welcome! We are excited to help you on your journey to medical school! This portal is a tool that provides the various details on what you should prepare for and expect during collegiate career. Please take time to navigate through this portal, particularly the <strong>"Pre-Health Organizer"</strong> on the left side bar, to learn how we can help you track your progress and become a competitive applicant</p>
+              <p>On this page we will walkthrough the key focus areas that medical schools use to evaluate applicants as well as provide a general timeline for what you should prepare for.</p>
+            <br>
+            <h5>Focus Areas</h5>
+            <table>
+              <tr>
+                <td>
+                <div align="center">
+                    <img src="/static/additionalfiles/focusareas3.png">
+                    <br>
+                </div>
+                </td>
+                <td>
+                    <div align="center">
+                        <div class="card" style="background-color: #d6f4af;">
+                            <div class="card-block">
+                            <b>Academics</b>
+                            <br>
+                            <u>Strong Applicant:</u>
+                            <br>
+                            <i>GPA <span style="color:green;">≥ 3.70</span>, MCAT <span style="color:green;">≥ 510</span></i>
+                            <br>
+                            <i><span style="color:green;">≥ 4</span> Semesters of Research Experience</i>
+                            <br>
+                            <a href="https://www.aamc.org/download/321508/data/factstablea23.pdf">National GPA & MCAT Statistics</a>
+                            <br>
+                            <a href="https://www.aamc.org/download/321442/data/factstablea1.pdf">National Demographic by School Statistics</a>
+                            <br>
+                            <br>
+                            <br>
+                            <b>Extracurriculars</b>
+                            <br>
+                            <u>Strong Applicant:</u>
+                            <br>
+                            <i><span style="color:green;">≥ 50</span> Hours of Shadowing</i>
+                            <br>
+                            <i><span style="color:green;">≥ 200</span> Volunteer Hours</i>
+                            <br>
+                            <i><span style="color:green;">≥ 200</span> Clinical Exposure Hours*</i>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+              </tr>
+            </table>
+      *Note: Clinical exposure can overlap with shadowing and volunteer hours, but can also include work hours (like as in a medical scribe or nursing assistant)
+      <br>
+      <br>
+      <h5>Tools</h5>
+      <p>Accomplishing all these goals may seem like a daunting task, but we are here to help. Below are four tools that we have built to help you on your journey</p>
+      <ol>
+          <li><a href="{{ url_for('academics') }}">Academics Tracker</a>: Enables track your semester and overall GPA along with your MCAT scores. After completion, directly compare with national averages on the <a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+          <li><a href="{{ url_for('activities') }}">Activities Tracker</a>: Use an AMCAS (official medical school application) equivalent to track your activities</li>
+          <li><a href="{{ url_for('scheduler') }}">Schedule Builder</a>: Plan your four year course plan with the schedule builder. This builder also allows you to calculate your semester and overall GPA depending on your predicted grades in certain classes</li>
+          <li><a href="{{ url_for('personalstatement') }}">Personal Statement</a>: Track your personal statement drafts. Applying to medical school requires a cohesive story as to why you want to pursue medicine.</li>
+          <li><a href="{{ url_for('status') }}">Application Status Tracker</a>: This tool allows you to organize your schools of interest as well as your progress in applying to them. It also allows you to store, print, and edit your secondary essays.</li>
+      </ol>
+      </div>
     </div>
+    <br>
+    <div class="card" style="background-color: #f1f4ab;">
+      <div class="card-block">
+            <h4 class="card-title">Timeline</h4>
+            <hr>
+                <h5>Freshman Year</h5>
+
+                <p>1. Visit the <a href="https://www.studentaffairs.pitt.edu/sorc/activitiesfair/">Activities Fair</a> to learn about prehealth, volunteering, and <a href="{{ url_for('organizations') }}">extracurricular</a> opportunities
+                <br>2. Attend a <a href="{{url_for("advisors")}}">Pre-Health workshop</a>
+                <br>3. Understand your class requirements and create a <a href="{{url_for("scheduler")}}"> 4-year course plan</a>.
+                <br>4. Learn how to get involved with research opportunities</p>
+
+                <h5>Sophomore Year</h5>
+
+                <p>1. Meet with <a href="https://www.appointmentquest.com/scheduler/2160041238">Pre-Health Advisor</a>
+                <br>2. Participate in Volunteer, Community service & Research opportunities, and particularly clinical experiences
+                <br>3. Research health professional schools
+                <br>4. Develop relationships with professors for potential letters of recommendation</p>
+
+                <h5>Junior Year - Senior Year</h5>
+
+                <p>1. Meet with <a href="https://www.appointmentquest.com/scheduler/2160041238">Pre-Health Advisor</a>
+                <br>2. Schedule MCAT prep course if desired
+                <br>3. Take MCAT exam for medical school (<a href="https://students-residents.aamc.org/applying-medical-school/article/mcat-testing-calendar-score-release-dates/">Registration Dates</a>) Preferably by May or June at the latest of application year.
+                <br>4. Determine a list of potential schools: <a href="{{url_for("status")}}">Application Tracker</a>
+                <br>5. Request letters of reference: <a href="{{ url_for("academics") }}#references">Reference Tracker <a>
+                <br>6. (April-May) Fill out <a href="https://students-residents.aamc.org/applying-medical-school/applying-medical-school-process/applying-medical-school-amcas/">AMCAS application<a>
+                <br>7. (Mid-June) Submit AMCAS Application
+                <br>8. Complete secondary applications from each school in a timely manner. Our <a href="{{url_for("status")}}">Application Tracker</a> allows you to manage save and print your essays.</p>
+
+                <h5>Senior Year - Gap Year</h5>
+
+                <p>1. Interviews - <i>Practice Interview Questions: </i><a href="/static/additionalfiles/mockinterviewquestions.docx">General</a>, <a href="https://schools.studentdoctor.net/schools/2/allopathic-medical-school-interview-feedback/1">School Specific</a>
+                <br>2. Admissions Offers
+                <br>3. Graduation</p>
+      </div>
+    </div>
+    <br>
+</div>
+<style>
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 100%;
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.card-block {
+    padding: 1% 3%;
+}
+            .div1 {
+    float: left;
+}
+
+.div2 {
+    float:right;
+}
+.div2 {
+    float:right;
+    text-align: right;
+}
+</style>
 {% endblock %}

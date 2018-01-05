@@ -16,7 +16,7 @@ import datetime
 
 # Flask app defined
 app = Flask(__name__)
-s
+
 # Establishes secret key for app and email confirmation
 app.config['SECRET_KEY'] = 'thisisasecret'
 app.config['SECURITY_PASSWORD_SALT'] = 'alsoasecret'
@@ -181,7 +181,7 @@ class Organizations(db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-
+identifier = 0
 # Creates class for login form w/ username and password
 class LoginForm(FlaskForm):
     # changed username to PeopleSoft number for now, would have to reset database and change required length
@@ -232,7 +232,6 @@ class ChangeAppCycleForm(FlaskForm):
 class ChangePasswordForm(FlaskForm):
     password = PasswordField('New Password', validators=[DataRequired()])
 
-identifier = 0
 
 # Login Page
 @app.route('/')
@@ -358,7 +357,7 @@ def reset():
             token=token,
             _external=True)
 
-        html = render_template('recover.html', recover_url=recover_url)
+        html = render_template('static/additionalfiles/recover.html', recover_url=recover_url)
         msg = Message('Password Recovery', sender='prehealthplanner@gmail.com', recipients=[user.email])
         msg.body = html
         mail.send(msg)
@@ -391,6 +390,7 @@ def reset_with_token(token):
 # Administrator functions
 
 @app.route('/userdetails', methods=['POST', 'GET'])
+@login_required
 def userdetails():
     global administratorstudent
     global identifier
@@ -453,6 +453,7 @@ def post():
 
 
 @app.route('/editorganizations', methods=['POST', 'GET'])
+@login_required
 def editorganizations():
     global identifier
     result = Organizations.query.all()
@@ -617,12 +618,15 @@ def academics():
 
 
 @app.route('/academicsdetails', methods=['POST', 'GET'])
+@login_required
 def academicsdetails():
     result = References.query.filter_by(id=request.form['academicsdetails']).first()
     return render_template("academicsdetails.html", result=result)
 
 
 @app.route('/academicsdetailsprocess', methods=['POST', 'GET'])
+@login_required
+
 def academicsdetailsprocess():
     edit = References.query.filter_by(id=request.form['update']).first()
     edit.email = request.form['email']
@@ -633,6 +637,7 @@ def academicsdetailsprocess():
 
 
 @app.route('/mcat', methods=['POST', 'GET'])
+@login_required
 def mcat():
     if request.method == 'POST':
         if request.form['examdate'] != '':
@@ -649,6 +654,7 @@ def mcat():
 
 
 @app.route('/references', methods=['POST', 'GET'])
+@login_required
 def references():
     if request.method == 'POST':
         if request.form['name'] != '':
@@ -680,12 +686,14 @@ def activities():
 
 
 @app.route('/activitiesdetails', methods=['POST', 'GET'])
+@login_required
 def activitiesdetails():
     result = Activities.query.filter_by(id=request.form['activitiesdetails']).first()
     return render_template("activitiesdetails.html", result=result)
 
 
 @app.route('/activitiesdetailsprocess', methods=['POST', 'GET'])
+@login_required
 def activitiesdetailsprocess():
     edit = Activities.query.filter_by(id=request.form['update']).first()
     edit.type = request.form['type']
@@ -717,6 +725,7 @@ def status():
 
 
 @app.route('/statusdetails', methods=['POST', 'GET'])
+@login_required
 def statusdetails():
     result = Status.query.filter_by(id=request.form['statusdetails']).first()
     medicalschool = Medicalschools.query.filter_by(medicalschool=result.university).first()
@@ -724,6 +733,7 @@ def statusdetails():
 
 
 @app.route('/statusdetailsprocess', methods=['POST', 'GET'])
+@login_required
 def statusdetailsprocess():
     edit = Status.query.filter_by(id=request.form['update']).first()
     edit.primary = request.form['primary']
@@ -745,6 +755,7 @@ def statusdetailsprocess():
 
 
 @app.route('/statusdetailsword', methods=['POST', 'GET'])
+@login_required
 def statusdetailsword():
     edit = Status.query.filter_by(id=request.form['word']).first()
     document = Document()
@@ -802,6 +813,7 @@ def personalstatementdetails():
 
 
 @app.route('/personalstatementdetailsprocess', methods=['POST', 'GET'])
+@login_required
 def personalstatementdetailsprocess():
     edit = Personal.query.filter_by(id=request.form['update']).first()
     edit.essay = request.form['essay']
@@ -810,6 +822,7 @@ def personalstatementdetailsprocess():
 
 
 @app.route('/personaldetailsword', methods=['POST', 'GET'])
+@login_required
 def personaldetailsword():
     studentname = User.query.filter_by(id=identifier).first()
     edit = Personal.query.filter_by(id=request.form['word']).first()
@@ -825,19 +838,23 @@ def personaldetailsword():
 
 
 @app.route('/information', methods=['POST', 'GET'])
+@login_required
 def information():
     return render_template("information.html")
 
 @app.route('/advisors', methods=['POST', 'GET'])
+@login_required
 def advisors():
     return render_template("advisors.html")
 
 @app.route('/organizations', methods=['POST', 'GET'])
+@login_required
 def organizations():
     result = Organizations.query.all()
     return render_template("organizations.html", result=result)
 
 @app.route('/universitystats', methods=['POST', 'GET'])
+@login_required
 def universitystats():
     global identifier
     result = Post.query.all()
@@ -930,6 +947,7 @@ def changepassword():
 
 #######STILL NEED TO TEST THIS FUNCTION
 @app.route('/deleteaccount', methods=['POST', 'GET'])
+@login_required
 def deleteaccount():
     User.query.filter_by(id=current_user.id).delete()
     Scheduler.query.filter_by(userid=current_user.id).delete()
@@ -944,6 +962,7 @@ def deleteaccount():
 
 
 @app.route('/deleteuser', methods=['POST', 'GET'])
+@login_required
 def deleteuser():
     User.query.filter_by(id=int(request.form['userdelete'])).delete()
     Scheduler.query.filter_by(userid=int(request.form['userdelete'])).delete()
@@ -958,6 +977,7 @@ def deleteuser():
 
 
 @app.route('/deletepost', methods=['POST', 'GET'])
+@login_required
 def deletepost():
     if request.form['postdelete'] != '':
         Post.query.filter_by(id=int(request.form['postdelete'])).delete()
@@ -966,6 +986,7 @@ def deletepost():
 
 
 @app.route('/deleteorganizations', methods=['POST', 'GET'])
+@login_required
 def deleteorganizations():
     if request.form['organizationsdelete'] != '':
         Organizations.query.filter_by(id=int(request.form['organizationsdelete'])).delete()
@@ -974,6 +995,7 @@ def deleteorganizations():
 
 
 @app.route('/deletescheduler', methods=['POST', 'GET'])
+@login_required
 def deletescheduler():
     if request.form['schedulerdelete'] != '':
         Scheduler.query.filter_by(id=int(request.form['schedulerdelete'])).delete()
@@ -982,6 +1004,7 @@ def deletescheduler():
 
 
 @app.route('/deletegrades', methods=['POST', 'GET'])
+@login_required
 def deletegrades():
     if request.form['gradesdelete'] != '':
         Grades.query.filter_by(id=int(request.form['gradesdelete'])).delete()
@@ -990,6 +1013,7 @@ def deletegrades():
 
 
 @app.route('/deletemcat', methods=['POST', 'GET'])
+@login_required
 def deletemcat():
     if request.form['mcatdelete'] != '':
         Mcat.query.filter_by(id=int(request.form['mcatdelete'])).delete()
@@ -998,6 +1022,7 @@ def deletemcat():
 
 
 @app.route('/deletereferences', methods=['POST', 'GET'])
+@login_required
 def deletereferences():
     if request.form['referencesdelete'] != '':
         References.query.filter_by(id=int(request.form['referencesdelete'])).delete()
@@ -1006,6 +1031,7 @@ def deletereferences():
 
 
 @app.route('/deleteactivities', methods=['POST', 'GET'])
+@login_required
 def deleteactivities():
     if request.form['activitiesdelete'] != '':
         Activities.query.filter_by(id=int(request.form['activitiesdelete'])).delete()
@@ -1022,6 +1048,7 @@ def deletestatus():
 
 
 @app.route('/deletepersonalstatement', methods=['POST', 'GET'])
+@login_required
 def deletepersonalstatement():
     if request.form['personalstatementdelete'] != '':
         Personal.query.filter_by(id=int(request.form['personalstatementdelete'])).delete()
