@@ -109,7 +109,7 @@
           <a class="nav-link dropdown-toggle mr-lg-2" id="alertsDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-fw fa-bell"></i>
             <span class="d-lg-none">Alerts
-              <span class="badge badge-pill badge-warning">6 New</span>
+              <span class="badge bg-green">6 New</span>
             </span>
             <span class="indicator text-warning d-none d-lg-block">
               <i class="fa fa-fw fa-circle"></i>
@@ -120,29 +120,29 @@
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{{ url_for("dashboard") }}#messageredirect">
               <span class="text-success">
-                <strong>
-                  <i class="fa fa-long-arrow-up fa-fw"></i>Status Update</strong>
+                  <strong>
+                  <i class="fa fa-circle-o fa-fw"></i>{{ notification[-1].title }}</strong>
               </span>
-              <span class="small float-right text-muted">11:21 AM</span>
-              <div class="dropdown-message small">This is an automated server response message. All systems are online.</div>
+              <span class="small float-right text-muted">{{ notification[-1].postdate }}</span>
+              <div class="dropdown-message small">{{ notification[-1].message }}</div>
             </a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{{ url_for("dashboard") }}#messageredirect">
               <span class="text-danger">
                 <strong>
-                  <i class="fa fa-long-arrow-down fa-fw"></i>Status Update</strong>
+                  <i class="fa fa-circle-o fa-fw"></i>{{ notification[-2].title }}</strong>
               </span>
-              <span class="small float-right text-muted">11:21 AM</span>
-              <div class="dropdown-message small">This is an automated server response message. All systems are online.</div>
+              <span class="small float-right text-muted">{{ notification[-2].postdate }}</span>
+              <div class="dropdown-message small">{{ notification[-3].message }}</div>
             </a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{{ url_for("dashboard") }}#messageredirect">
               <span class="text-success">
                 <strong>
-                  <i class="fa fa-long-arrow-up fa-fw"></i>Status Update</strong>
+                  <i class="fa fa-circle-o fa-fw"></i>{{ notification[-3].title }}</strong>
               </span>
-              <span class="small float-right text-muted">11:21 AM</span>
-              <div class="dropdown-message small">This is an automated server response message. All systems are online.</div>
+              <span class="small float-right text-muted">{{ notification[-3].postdate }}</span>
+              <div class="dropdown-message small">{{ notification[-3].message }}</div>
             </a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item small" href="{{ url_for("dashboard") }}#messageredirect">View all alerts</a>

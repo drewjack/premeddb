@@ -13,6 +13,7 @@ from flask_mail import Mail, Message
 from flask import request
 from itsdangerous import URLSafeTimedSerializer
 import datetime
+from flask_socketio import SocketIO, send, emit
 
 # Flask app defined
 app = Flask(__name__)
@@ -39,6 +40,10 @@ app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USERNAME'] = 'prehealthplanner@gmail.com'
 app.config['MAIL_PASSWORD'] = 'supersonic'
 mail = Mail(app)
+
+
+# Establishes socketio
+socketio = SocketIO(app)
 
 
 class User(UserMixin, db.Model):
@@ -457,7 +462,8 @@ def post():
         fullname = current_user.firstname + ' ' + current_user.lastname
         signature = Post(userid=fullname, recipient=recipientstring, title=title, message=message, postdate=postdate)
         msg = Message('Pre-Health Portal Notification', sender='prehealthplanner@gmail.com', recipients=[current_user.email])
-        msg.body = signature
+        html = render_template("notificationemail.html", signature=signature)
+        msg.body = html
         mail.send(msg)
         db.session.add(signature)
         db.session.commit()
@@ -465,11 +471,17 @@ def post():
     return render_template("post.html", result=result)
 
 
+@socketio.on('message')
+def handleMessage(msg):
+    print('Message: ' + msg)
+    send(msg, broadcast=True)
+
+
 @app.route('/editorganizations', methods=['POST', 'GET'])
 @login_required
 def editorganizations():
     global identifier
-    # Failsafe to make sure idenfitier is set to current user if not previously set
+    # Failsafe to make sure identifier is set to current user if not previously set
     try:
         identifier
     except:
@@ -510,7 +522,14 @@ def editorganizationsprocess():
     db.session.commit()
     return redirect(url_for('editorganizations'))
 
+
 # Functions for all users
+@app.context_processor
+def notification():
+    if current_user.is_authenticated:
+        return dict(notification=Post.query.filter(Post.recipient.contains(current_user.year)).all())
+    else:
+        return dict(notification="")
 
 
 @app.route('/dashboard', methods=['GET', 'POST'])
@@ -518,12 +537,11 @@ def editorganizationsprocess():
 def dashboard():
     global identifier
 
-    # Failsafe to make sure idenfitier is set to current user if not previously set
+    # Failsafe to make sure identifier is set to current user if not previously set
     try:
         identifier
     except:
         identifier = current_user.id
-
 
     if current_user.admin == 'y':
         admin = " (Admin: " + current_user.firstname + " " + current_user.lastname + " )"
