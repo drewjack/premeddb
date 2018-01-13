@@ -14,6 +14,9 @@ from flask import request
 from itsdangerous import URLSafeTimedSerializer
 import datetime
 from flask_socketio import SocketIO, send, emit
+from functools import wraps
+from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required
+
 
 # Flask app defined
 app = Flask(__name__)
@@ -46,6 +49,17 @@ mail = Mail(app)
 socketio = SocketIO(app)
 
 
+# roles_users = db.Table('roles_users',
+#         db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+#         db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
+#
+#
+# class Role(db.Model, RoleMixin):
+#     id = db.Column(db.Integer(), primary_key=True)
+#     name = db.Column(db.String(80), unique=True)
+#     description = db.Column(db.String(255))
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15), unique=True)
@@ -57,6 +71,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(80))
     admin = db.Column(db.String(1))
     confirmed = db.Column(db.BOOLEAN, nullable=False, default=False)
+    #roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
     scheduler = db.relationship('Scheduler', backref='student', lazy='dynamic')
     mcat = db.relationship('Mcat', backref='student', lazy='dynamic')
     grades = db.relationship('Grades', backref='student', lazy='dynamic')
@@ -69,6 +84,31 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return self.username
+
+    def __init__(self, urole):
+        self.urole = urole
+
+
+# def login_required2(role="ANY"):
+#     def wrapper(func):
+#         @wraps(func)
+#         def decorated_view(*args, **kwargs):
+#
+#             if not current_user.is_authenticated():
+#                 return app.login_manager.unauthorized()
+#             urole = app.login_manager.reload_user().get_urole()
+#             if ((urole != role) and (role != "ANY")):
+#                 return app.login_manager.unauthorized()
+#             return func(*args, **kwargs)
+#
+#         return decorated_view
+#
+#     return wrapper
+#
+#
+# # Setup Flask-Security
+# user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+# security = Security(app, user_datastore)
 
 
 class Post(db.Model):
@@ -186,6 +226,7 @@ class Organizations(db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
 
 # Creates class for login form w/ username and password
 class LoginForm(FlaskForm):
@@ -440,6 +481,17 @@ def post():
         identifier
     except:
         identifier = current_user.id
+    global freshman
+    global sophomore
+    global junior
+    global senior
+    global appcycle
+
+    freshman = []
+    sophomore = []
+    junior = []
+    senior = []
+    appcycle = []
 
     result = Post.query.all()
     if request.method == 'POST':
@@ -447,21 +499,27 @@ def post():
         message = request.form['message']
         now = datetime.datetime.now()
         postdate = now.strftime("%Y-%m-%d %I:%M %p")
-        recipient = []
+        recipientlist = []
         if request.form.get('Freshman') == 'Freshman':
-            recipient.append('Freshman')
+            freshman = User.query.filter_by(year='Freshman').all()
         if request.form.get('Sophomore') == 'Sophomore':
-            recipient.append('Sophomore')
+            sophomore = User.query.filter_by(year="Sophomore").all()
         if request.form.get('Junior') == 'Junior':
-            recipient.append('Junior')
+            junior = User.query.filter_by(year="Junior").all()
         if request.form.get('Senior') == 'Senior':
-            recipient.append('Senior')
+            senior = User.query.filter_by(year="Senior").all()
         if request.form.get('appcycle') == 'appcycle':
-            recipient.append('appcycle')
+            appcycle = User.query.filter_by(appcycle="2018-2019").all()
+
+        recipientlist = freshman + sophomore + junior + senior + appcycle
+        recipient = []
+        for i in recipientlist:
+            if i not in recipient:
+                recipient.append(i.email)
         recipientstring = "['" + "','".join(recipient) + "']"
         fullname = current_user.firstname + ' ' + current_user.lastname
         signature = Post(userid=fullname, recipient=recipientstring, title=title, message=message, postdate=postdate)
-        msg = Message('Pre-Health Portal Notification', sender='prehealthplanner@gmail.com', recipients=[current_user.email])
+        msg = Message('Pre-Health Portal Notification', sender='prehealthplanner@gmail.com', recipients=recipient)
         html = render_template("notificationemail.html", signature=signature)
         msg.body = html
         mail.send(msg)
@@ -527,7 +585,7 @@ def editorganizationsprocess():
 @app.context_processor
 def notification():
     if current_user.is_authenticated:
-        return dict(notification=Post.query.filter(Post.recipient.contains(current_user.year)).all())
+        return dict(notification=Post.query.filter(Post.recipient.contains(current_user.email)).all())
     else:
         return dict(notification="")
 
