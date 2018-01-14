@@ -15,7 +15,6 @@ from itsdangerous import URLSafeTimedSerializer
 import datetime
 from flask_socketio import SocketIO, send, emit
 from functools import wraps
-from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required
 
 
 # Flask app defined
@@ -49,17 +48,6 @@ mail = Mail(app)
 socketio = SocketIO(app)
 
 
-# roles_users = db.Table('roles_users',
-#         db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
-#         db.Column('role_id', db.Integer(), db.ForeignKey('role.id')))
-#
-#
-# class Role(db.Model, RoleMixin):
-#     id = db.Column(db.Integer(), primary_key=True)
-#     name = db.Column(db.String(80), unique=True)
-#     description = db.Column(db.String(255))
-
-
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(15), unique=True)
@@ -70,8 +58,8 @@ class User(UserMixin, db.Model):
     appcycle = db.Column(db.String(20), unique=False)
     password = db.Column(db.String(80))
     admin = db.Column(db.String(1))
+    urole = db.Column(db.String(80))
     confirmed = db.Column(db.BOOLEAN, nullable=False, default=False)
-    #roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
     scheduler = db.relationship('Scheduler', backref='student', lazy='dynamic')
     mcat = db.relationship('Mcat', backref='student', lazy='dynamic')
     grades = db.relationship('Grades', backref='student', lazy='dynamic')
@@ -88,27 +76,23 @@ class User(UserMixin, db.Model):
     def __init__(self, urole):
         self.urole = urole
 
+    def get_urole(self):
+            return self.urole
 
-# def login_required2(role="ANY"):
-#     def wrapper(func):
-#         @wraps(func)
-#         def decorated_view(*args, **kwargs):
-#
-#             if not current_user.is_authenticated():
-#                 return app.login_manager.unauthorized()
-#             urole = app.login_manager.reload_user().get_urole()
-#             if ((urole != role) and (role != "ANY")):
-#                 return app.login_manager.unauthorized()
-#             return func(*args, **kwargs)
-#
-#         return decorated_view
-#
-#     return wrapper
-#
-#
-# # Setup Flask-Security
-# user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-# security = Security(app, user_datastore)
+
+def login_required2(role="ANY"):
+    def wrapper(fn):
+        @wraps(fn)
+        def decorated_view(*args, **kwargs):
+
+            if not current_user.is_authenticated:
+               return login_manager.unauthorized()
+            urole = current_user.urole
+            if ( (urole != role) and (role != "ANY")):
+                return login_manager.unauthorized()
+            return fn(*args, **kwargs)
+        return decorated_view
+    return wrapper
 
 
 class Post(db.Model):
@@ -447,12 +431,12 @@ def userdetails():
 
 
 @app.route('/administrator', methods=['GET', 'POST'])
-@login_required
+@login_required2(role="ADMIN")
 def administrator():
     # Checks if you are an administrator or not
-    if current_user.admin != 'y':
-        flash('You are not an administrator.')
-        return redirect(url_for('dashboard'))
+    # if current_user.admin != 'y':
+    #     flash('You are not an administrator.')
+    #     return redirect(url_for('dashboard'))
     return render_template("administrator.html")
 
 
@@ -492,6 +476,7 @@ def post():
     junior = []
     senior = []
     appcycle = []
+    recipientclass = []
 
     result = Post.query.all()
     if request.method == 'POST':
@@ -502,14 +487,19 @@ def post():
         recipientlist = []
         if request.form.get('Freshman') == 'Freshman':
             freshman = User.query.filter_by(year='Freshman').all()
+            recipientclass.append('Freshman')
         if request.form.get('Sophomore') == 'Sophomore':
             sophomore = User.query.filter_by(year="Sophomore").all()
+            recipientclass.append('Sophomore')
         if request.form.get('Junior') == 'Junior':
             junior = User.query.filter_by(year="Junior").all()
+            recipientclass.append('Junior')
         if request.form.get('Senior') == 'Senior':
             senior = User.query.filter_by(year="Senior").all()
+            recipientclass.append('Senior')
         if request.form.get('appcycle') == 'appcycle':
             appcycle = User.query.filter_by(appcycle="2018-2019").all()
+            recipientclass.append('Current App Cycle')
 
         recipientlist = freshman + sophomore + junior + senior + appcycle
         recipient = []
@@ -518,7 +508,7 @@ def post():
                 recipient.append(i.email)
         recipientstring = "['" + "','".join(recipient) + "']"
         fullname = current_user.firstname + ' ' + current_user.lastname
-        signature = Post(userid=fullname, recipient=recipientstring, title=title, message=message, postdate=postdate)
+        signature = Post(userid=fullname, recipient=recipientstring, recipientclass=recipientclass, title=title, message=message, postdate=postdate)
         msg = Message('Pre-Health Portal Notification', sender='prehealthplanner@gmail.com', recipients=recipient)
         html = render_template("notificationemail.html", signature=signature)
         msg.body = html
