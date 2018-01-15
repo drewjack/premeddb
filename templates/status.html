@@ -7,7 +7,7 @@ College Application Status
       <h1>College Application Status Tracker</h1>
       <br>
       <p>Use the Status Tracker to track your progress for each school you apply to and save your essays.
-      <br><strong>Official School Tuition, Offered Degrees, MCAT, and GPA Information:</strong> <a href="https://apps.aamc.org/msar-ui/#/landing"> Medical School Admission Requirements</a></p>
+      <br><strong>Official School Tuition, Offered Degrees, MCAT, and GPA Information:</strong> <a href="https://apps.aamc.org/msar-ui/#/landing" target="blank"> Medical School Admission Requirements </a></p>
       <p><i>Tip: Add a school and click the edit button to see general information about the school.</i></p>
 
      <table id="table" class="table table-hover table-mc-light-blue">
@@ -63,19 +63,19 @@ College Application Status
         </tr>
         {% for r in result %}
           <tr>
-            <td style ="word-break:break-all;">
+            <td style ="word-break:break-word;">
                 {{r.university}}
             </td>
-            <td style ="word-break:break-all;">
+            <td style ="word-break:break-word;">
                 {{r.primary}}
             </td>
-            <td style ="word-break:break-all;">
+            <td style ="word-break:break-word;">
                 {{r.secondary}}
             </td>
-            <td style ="word-break:break-all;">
+            <td style ="word-break:break-word;">
                 {{r.interview}}
             </td>
-              <td style ="word-break:break-all;">
+              <td style ="word-break:break-word;">
                 {{r.offer}}
             </td>
             <td style ="word-break:break-all;">
