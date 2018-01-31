@@ -216,7 +216,7 @@ def load_user(user_id):
 class LoginForm(FlaskForm):
     # changed username to PeopleSoft number for now, would have to reset database and change required length
     username = StringField('PeopleSoft Number', validators=[InputRequired(), Length(min=4, max=15)])
-    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
+    password = PasswordField('Password', validators=[InputRequired(), Length(min=6, max=80)])
     remember = BooleanField('Remember Me')
 
 
